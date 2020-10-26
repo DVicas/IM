@@ -379,6 +379,15 @@ module mano-types
                   ";
                 type string;
               }
+              leaf helm-version {
+                description
+                  "Helm version to use for this helm-chart, v3 by default";
+                type enumeration {
+                  enum v2;
+                  enum v3;
+                }
+                default v3;
+              }
             }
           }
           leaf metric-service {
