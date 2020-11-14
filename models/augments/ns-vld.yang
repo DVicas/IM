@@ -24,6 +24,10 @@ module ns-vld {
         prefix nsd;
     }
 
+    import ietf-inet-types {
+        prefix "inet";
+    }
+
     grouping extended-vld {
         container provider-network {
             description
@@ -48,10 +52,29 @@ module ns-vld {
             type boolean;
             default false;
         }
+
+        leaf vim-network-name {
+            description
+              "Name of network in VIM account. This is used to indicate
+               pre-provisioned network name in cloud account.";
+            type string;
+        }
+    }
+
+    grouping extended-constituent-cpd-id {
+        leaf ip-address {
+            description
+              "IP address assigned to the internal connection point";
+            type inet:ip-address;
+        }
     }
 
 
     augment "/nsd:nsd/nsd:nsd/nsd:virtual-link-desc" {
         uses extended-vld;
+    }
+
+    augment "/nsd:nsd/nsd:nsd/nsd:df/nsd:vnf-profile/nsd:virtual-link-connectivity/nsd:constituent-cpd-id" {
+        uses extended-constituent-cpd-id;
     }
 }
