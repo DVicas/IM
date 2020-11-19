@@ -1,0 +1,77 @@
+#  Copyright 2020 Whitestack LLC
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+#  implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+vnfd:
+  id: hackfest_basic-vnf
+  product-name: hackfest_basic-vnf
+  description: A basic VNF descriptor w/ one VDU
+  version: "1.0"
+  mgmt-cp: vnf-cp0
+
+  virtual-compute-desc:
+    - id: cirros-compute
+      virtual-cpu:
+        num-virtual-cpu: 1
+      virtual-memory:
+        size: 1 # Memory size in GB
+
+  virtual-storage-desc:
+    - id: cirros-storage
+      size-of-storage: 10
+
+  sw-image-desc:
+    - id: ubuntu1604
+      name: ubuntu1604
+      checksum:
+        hash: # Mandatory?
+    - id: ubuntu1604-aws
+      name: ubuntu1604-aws
+      image: ubuntu/images/hvm-ssd/ubuntu-artful-17.10-amd64-server-20180509
+      vim-type: aws
+      checksum:
+        hash: # Mandatory?
+
+  vdu:
+    - id: hackfest_basic-VM
+      name: hackfest_basic-VM
+      virtual-compute-desc: cirros-compute
+      virtual-storage-desc:
+        - cirros-storage
+      sw-image-desc: ubuntu1604
+      alternative-sw-image-desc:
+        - ubuntu1604-aws
+      int-cpd:
+        - id: eth0-int
+          virtual-network-interface-requirement:
+            - name: vdu-eth0
+              virtual-interface:
+                type: PARAVIRT
+
+  df:
+    - id: cirros_default
+      vdu-profile:
+        - id: hackfest_basic-VM
+          min-number-of-instances: 1
+      instantiation-level:
+        - id: default
+          vdu-level:
+            - vdu-id: hackfest_basic-VM
+              number-of-instances: 1
+
+  ext-cpd:
+    - id: vnf-cp0
+      int-cpd: # Connection to int-cpd
+        vdu-id: hackfest_basic-VM
+        cpd: eth0-int

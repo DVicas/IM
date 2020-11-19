@@ -1,0 +1,165 @@
+/*
+  Copyright 2020 Whitestack LLC
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+  implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+module kdu {
+    yang-version 1.1;
+    namespace "urn:etsi:osm:yang:augments:kdu";
+    prefix "kdu";
+
+    import etsi-nfv-vnfd {
+        prefix vnfd;
+    }
+
+    import common-augments {
+        prefix common;
+    }
+
+    grouping extended-ext-cpd {
+        leaf k8s-cluster-net {
+            description
+              "Reference to the K8s cluster network
+               to which CPs instantiated from this external CP
+               Descriptor (CPD) connect.";
+            type leafref {
+                path "/vnfd:vnfd/kdu:k8s-cluster/kdu:nets/kdu:id";
+            }
+        }
+    }
+
+    grouping extended-kdu-configuration {
+        list kdu-configuration {
+            key "id";
+            leaf id {
+                description
+                  "Internal identifier for the KDU configuration";
+                type string;
+            }
+            uses common:vnfc-configuration;
+            uses common:vdu-config-access;
+
+            leaf-list blacklist-config-primitive {
+                description
+                  "List of blacklisted config primitives from the list of
+                   default kdu config primitives";
+
+                type enumeration {
+                    enum upgrade;
+                    enum rollback;
+                }
+            }
+        }
+    }
+
+    grouping extended-kdu-model {
+        list kdu-model {
+            key "id";
+
+            leaf id {
+                description
+                  "Internal identifier for the KDU model";
+                type string;
+            }
+
+            leaf kdu-model-type {
+                description
+                  "Indicates the KDU model, either as a helm-chart or as a juju-bundle.";
+
+                type enumeration {
+                    enum helm-chart;
+                    enum juju-bundle;
+                }
+            }
+
+            leaf kdu-model-locator {
+                description
+                  "Indicates the KDU model location, either as a path to a folder in the 
+                   package or as a URL where to fetch the model.";
+
+                type string;
+            }
+        }
+    }
+
+    grouping extended-kdu {
+        list kdu {
+            description
+              "List of K8s Deployment Units";
+            key "name";
+
+            leaf name {
+                description
+                  "Unique name for the KDU";
+                type string;
+            }
+
+            leaf description {
+                description
+                  "Description of the KDU.";
+                type string;
+            }
+        }
+
+        container k8s-cluster {
+            leaf-list version {
+                description
+                  "List of supported K8s versions.
+                   The cluster where the KDUs will be deployed will have to match
+                   one of these versions.";
+
+                type string;
+            }
+
+            leaf-list cni {
+                description
+                  "List of supported CNI plugins.
+                   The cluster where the KDUs will be deployed will have to use
+                   one of these CNI plugins.";
+
+                type enumeration {
+                    enum calico;
+                    enum flannel;
+                    enum multus;
+                }
+            }
+
+            list nets {
+                description
+                  "List of required networks in the K8s cluster.
+                   The cluster where the KDUs will be deployed will have to use
+                   one of these CNI plugins.";
+
+                key "id";
+
+                leaf id {
+                    description
+                      "Internal identifier for the K8s cluster network in this VNF";
+                    type string;
+                }
+            }
+        }
+    }
+
+    augment "/vnfd:vnfd" {
+        uses extended-kdu;
+        uses extended-kdu-configuration;
+        uses extended-kdu-model;
+    }
+
+    augment "/vnfd:vnfd/vnfd:ext-cpd/vnfd:cp-connection" {
+        uses extended-ext-cpd;
+    }
+}

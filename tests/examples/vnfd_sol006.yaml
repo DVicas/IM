@@ -1,0 +1,66 @@
+#  Copyright 2020 Whitestack LLC
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+#  implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+# Using new SOL006-based OSM model
+
+vnfd:
+  id: vnfd
+  mgmt-cp: vnf-mgmt-ext
+
+  ext-cpd:
+    - id: vnf-mgmt-ext
+      int-cpd:
+        vdu-id: mgmtVM
+        cpd: vnf-mgmt-int
+    - id: vnf-data-ext
+      int-cpd:
+        vdu-id: dataVM
+        cpd: vnf-data-int
+
+  int-virtual-link-desc:
+    - id: internal
+
+  vdu:
+    - id: mgmtVM
+      int-cpd:
+        - id: vnf-mgmt-int
+          virtual-network-interface-requirement:
+            - name: mgmtVM-eth0
+              position: "1"
+              virtual-interface:
+                type: VIRTIO
+        - id: mgmtVM-internal
+          int-virtual-link-desc: internal
+          virtual-network-interface-requirement:
+            - name: mgmtVM-eth1
+              position: "2"
+              virtual-interface:
+                type: VIRTIO
+
+    - id: dataVM
+      int-cpd:
+        - id: dataVM-internal
+          int-virtual-link-desc: internal
+          virtual-network-interface-requirement:
+            - name: dataVM-eth0
+              position: "1"
+              virtual-interface:
+                type: VIRTIO
+        - id: vnf-data-int
+          virtual-network-interface-requirement:
+            - name: dataVM-xe0
+              position: "2"
+              virtual-interface:
+                type: VIRTIO

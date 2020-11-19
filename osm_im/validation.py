@@ -14,11 +14,12 @@
 # limitations under the License.
 
 import yaml
-import json
-# import logging
+import importlib
 from osm_im.vnfd import vnfd as vnfd_im
 from osm_im.nsd import nsd as nsd_im
 from osm_im.nst import nst as nst_im
+etsi_nfv_vnfd = importlib.import_module("osm_im.etsi-nfv-vnfd")
+etsi_nfv_nsd = importlib.import_module("osm_im.etsi-nfv-nsd")
 from pyangbind.lib.serialise import pybindJSONDecoder
 import pyangbind.lib.pybindJSON as pybindJSON
 
@@ -39,6 +40,10 @@ class Validation:
             myobj = nsd_im()
         elif item == "nst":
             myobj = nst_im()
+        elif item == "etsi_nfv_vnfd":
+            myobj = etsi_nfv_vnfd.etsi_nfv_vnfd()
+        elif item == "etsi_nfv_nsd":
+            myobj = etsi_nfv_nsd.etsi_nfv_nsd()
         else:
             raise ValidationException("Not possible to validate '{}' item".format(item))
 
@@ -62,6 +67,10 @@ class Validation:
             item = "nsd"
         elif 'nst' in data:
             item = "nst"
+        elif 'vnfd' in data:
+            item = "etsi_nfv_vnfd"
+        elif 'nsd' in data:
+            item = "etsi_nfv_nsd"
         else:
             raise ValidationException("Error in YAML validation. Not possible to determine the type of descriptor in the first line. Expected values: vnfd:vnfd-catalog, vnfd-catalog, nsd:nsd-catalog, nsd-catalog, nst")
 

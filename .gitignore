@@ -35,6 +35,8 @@ osm_im/vnfd.py
 osm_im/nst.py
 osm_im/nsi.py
 osm_im/osm.yaml
+osm_im/etsi-nfv-nsd.py
+osm_im/etsi-nfv-vnfd.py
 
 #Pyang and other tools' folders
 pyangbind

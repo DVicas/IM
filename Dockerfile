@@ -14,7 +14,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 RUN  apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get -y install git make wget python \
@@ -22,6 +22,7 @@ RUN  apt-get update && \
                                             debhelper tox python-setuptools \
                                             python3-setuptools build-essential dh-make \
                                             openjdk-8-jdk maven && \
+  update-java-alternatives --set /usr/lib/jvm/java-1.8.0-openjdk-amd64 && \
   DEBIAN_FRONTEND=noninteractive pip3 install pip==9.0.3 && \
   DEBIAN_FRONTEND=noninteractive pip3 install -U pyang pyangbind && \
   DEBIAN_FRONTEND=noninteractive pip3 install -U stdeb && \

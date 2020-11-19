@@ -35,20 +35,9 @@ class Install_osm_im(install):
         import pyangbind
         print("Using dir {}/{} for python artifacts".format(os.getcwd(), self.im_dir))
         path = "{}/{}".format(os.getcwd(), self.im_dir)
-        for files_item in ['vnfd', 'nsd', 'nst']:
-            protoc_command = ["pyang",
-                              "-Werror",
-                              "--plugindir",
-                              "{}/plugin".format(os.path.dirname(pyangbind.__file__)),
-                              "--path",
-                              self.model_dir,
-                              "-f", "pybind",
-                              "-o",
-                              "{}/{}.py".format(self.im_dir, files_item),
-                              "{}/{}.yang".format(self.model_dir, files_item)]
-            print("Generating {}.py from {}.yang".format(files_item, files_item))
-            if subprocess.call(protoc_command) != 0:
-                sys.exit(-1)
+        protoc_command = ["make", "models"]
+        if subprocess.call(protoc_command) != 0:
+            sys.exit(-1)
         # To ensure generated files are copied to the python installation folder
         self.copy_tree(self.im_dir, "{}{}".format(self.install_lib, self.im_dir))
         install.run(self)
