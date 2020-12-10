@@ -41,13 +41,7 @@ module kdu {
     }
 
     grouping extended-kdu-configuration {
-        list kdu-configuration {
-            key "id";
-            leaf id {
-                description
-                  "Internal identifier for the KDU configuration";
-                type string;
-            }
+        container kdu-configuration {
             uses common:vnfc-configuration;
             uses common:vdu-config-access;
 
@@ -60,47 +54,6 @@ module kdu {
                     enum upgrade;
                     enum rollback;
                 }
-            }
-        }
-    }
-
-    grouping extended-kdu-model {
-        list kdu-model {
-            key "id";
-
-            leaf id {
-                description
-                  "Internal identifier for the KDU model";
-                type string;
-            }
-
-            leaf kdu-model-type {
-                description
-                  "Indicates the KDU model, either as a helm-chart or as a juju-bundle.";
-
-                type enumeration {
-                    enum helm-chart;
-                    enum juju-bundle;
-                }
-            }
-
-            leaf kdu-model-helm-version {
-                description
-                  "Helm version to use for this helm-chart, v3 by default.";
-
-                type enumeration {
-                    enum v2;
-                    enum v3;
-                }
-                default v3;
-            }
-
-            leaf kdu-model-locator {
-                description
-                  "Indicates the KDU model location, either as a path to a folder in the 
-                   package or as a URL where to fetch the model.";
-
-                type string;
             }
         }
     }
@@ -122,6 +75,50 @@ module kdu {
                   "Description of the KDU.";
                 type string;
             }
+
+            choice kdu-model {
+                description
+                  "Indicates the KDU model, either as a helm-chart or as a juju-bundle.";
+
+                case helm-chart {
+                    leaf helm-chart {
+                        description
+                          "Helm chart that models the KDU, in any of the following ways:
+                           - <helm-repo>/<helm-chart>
+                           - <helm-chart folder under k8s_models folder in the package>
+                           - <helm-chart tgz file (w/ or w/o extension) under k8s_models folder in the package>
+                           - <URL_where_to_fetch_chart>
+                          ";
+                        type string;
+                    }
+
+                    leaf helm-version {
+                        description
+                          "Helm version to use for this helm-chart, v3 by default";
+                        type enumeration {
+                            enum v2;
+                            enum v3;
+                        }
+                        default v3;
+                    }
+                }
+
+                case juju-bundle {
+                    leaf juju-bundle {
+                        description
+                          "Juju bundle that models the KDU, in any of the following ways:
+                           - <juju-repo>/<juju-bundle>
+                           - <juju-bundle folder under k8s_models folder in the package>
+                           - <juju-bundle tgz file (w/ or w/o extension) under k8s_models folder in the package>
+                           - <URL_where_to_fetch_juju_bundle>
+                          ";
+                        type string;
+                    }
+                }
+            }
+
+            uses extended-kdu-configuration;
+
         }
 
         container k8s-cluster {
@@ -166,8 +163,6 @@ module kdu {
 
     augment "/vnfd:vnfd" {
         uses extended-kdu;
-        uses extended-kdu-configuration;
-        uses extended-kdu-model;
     }
 
     augment "/vnfd:vnfd/vnfd:ext-cpd/vnfd:cp-connection" {

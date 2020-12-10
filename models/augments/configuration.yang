@@ -28,9 +28,6 @@ module configuration {
         prefix day1-2;
     }
 
-    import kdu {
-        prefix kdu;
-    }
     grouping extended-vnf-configuration {
         leaf vnf-configuration-id {
             description
@@ -51,39 +48,8 @@ module configuration {
         }
     }
 
-    grouping extended-kdu-configuration {
-        list kdu-profile {
-            key "name";
-
-            leaf name {
-                description
-                  "Reference to the KDU";
-                type leafref {
-                    path "/vnfd:vnfd/kdu:kdu/kdu:name";
-                }
-            }
-
-            leaf kdu-configuration-id {
-                description
-                  "Reference to the KDU configuration to use in this DF";
-                type leafref {
-                    path "/vnfd:vnfd/kdu:kdu-configuration/kdu:id";
-                }
-            }
-
-            leaf kdu-model-id {
-                description
-                  "Reference to the KDU model to use in this DF";
-                type leafref {
-                    path "/vnfd:vnfd/kdu:kdu-model/kdu:id";
-                }
-            }
-        }
-    }
-
     augment "/vnfd:vnfd/vnfd:df" {
         uses extended-vnf-configuration;
-        uses extended-kdu-configuration;
     }
 
     augment "/vnfd:vnfd/vnfd:df/vnfd:vdu-profile" {

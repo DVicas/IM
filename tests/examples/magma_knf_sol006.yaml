@@ -31,14 +31,5 @@ vnfd:
 
   kdu:
     - name: orc8r
+      helm-chart: magma/orc8r
 
-  kdu-model:
-    - id: orc8r-model
-      kdu-model-type: helm-chart
-      kdu-model-locator: magma/orc8r
-
-  df:
-    - id: kdu-df
-      kdu-profile:
-        - name: orc8r
-          kdu-model-id: orc8r-model
