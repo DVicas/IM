@@ -28,7 +28,7 @@ module ip-profiles {
     }
 
     import etsi-nfv-descriptors {
-      prefix nfv;
+        prefix nfv;
     }
 
     grouping extended-vld-protocol-data{

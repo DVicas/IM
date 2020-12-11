@@ -25,7 +25,7 @@ module ns-vld {
     }
 
     import ietf-inet-types {
-        prefix "inet";
+        prefix inet;
     }
 
     grouping extended-vld {
@@ -61,20 +61,69 @@ module ns-vld {
         }
     }
 
-    grouping extended-constituent-cpd-id {
-        leaf ip-address {
-            description
-              "IP address assigned to the internal connection point";
-            type inet:ip-address;
-        }
-    }
-
-
     augment "/nsd:nsd/nsd:nsd/nsd:virtual-link-desc" {
         uses extended-vld;
     }
 
-    augment "/nsd:nsd/nsd:nsd/nsd:df/nsd:vnf-profile/nsd:virtual-link-connectivity/nsd:constituent-cpd-id" {
-        uses extended-constituent-cpd-id;
+    grouping deviated-constituent-cpd-id {
+        list constituent-cpd-id {
+           key "constituent-base-element-id constituent-cpd-id";
+
+           description
+             "Describes a connection point on a VNF/PNF or a SAP
+              which connects to virtual links instantiated from
+              the profile identified in the virtualLinkProfileId
+              attribute.";
+           reference
+             "GS NFV IFA014: Section 6.3.7
+              NsVirtualLinkConnectivity information element";
+
+           leaf constituent-base-element-id {
+               type leafref {
+                   path "../../../nsd:id";
+               }
+               description
+                 "Reference to the profile of an NS constituent.";
+               reference
+                 "GS NFV IFA014: Section 6.4.8
+                  CpdInConstituentElement information element";
+           }
+
+           leaf constituent-cpd-id {
+               type leafref {
+                   path "deref(../../../nsd:vnfd-id)/../nsd:ext-cpd/nsd:id";
+               }
+               description
+                 "A reference to the descriptor of a connection point
+                  attached to one of the constituent VNFs and PNFs or to
+                  the descriptor of a NS SAP.";
+               reference
+                 "GS NFV IFA014: Section 6.4.4.2 CpdPool information
+                  element";
+           }
+
+           leaf ip-address {
+               description
+                 "IP address assigned to the internal connection point";
+                  type inet:ip-address;
+           }
+       }
     }
+
+    deviation "/nsd:nsd/nsd:nsd/nsd:df/nsd:vnf-profile/nsd:virtual-link-connectivity/nsd:constituent-cpd-id" {
+        description
+          "Deviation of the list of constituent-cpd-id, because the key must be
+           a compound key 'constituent-base-element-id constituent-cpd-id'";
+        deviate not-supported;
+    }
+
+    augment "/nsd:nsd/nsd:nsd/nsd:df/nsd:vnf-profile/nsd:virtual-link-connectivity" {
+        description
+          "Augment of nsd:virtual-link-connectivity to define a list of constituent-cpd-id,
+           replacing the one in SOL006, with a compound key
+           'constituent-base-element-id constituent-cpd-id', and the
+           addition of the leaf ip-address for each item in the list.";
+        uses deviated-constituent-cpd-id;
+    }
+
 }
