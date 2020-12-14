@@ -84,6 +84,17 @@ module kdu {
                 }
             }
 
+            leaf kdu-model-helm-version {
+                description
+                  "Helm version to use for this helm-chart, v3 by default.";
+
+                type enumeration {
+                    enum v2;
+                    enum v3;
+                }
+                default v3;
+            }
+
             leaf kdu-model-locator {
                 description
                   "Indicates the KDU model location, either as a path to a folder in the 
