@@ -62,12 +62,14 @@ $(TREES_DIR):
 %.tree.txt: $(TREES_DIR) yang-ietf
 	$(Q)echo generating $@ from $*.yang
 	$(if $(findstring etsi,$@), $(eval DIR=$(SOL006_MODEL_DIR)),$(eval DIR = $(MODEL_DIR)))
-	$(Q)pyang $(PYANG_OPTIONS) --path $(DIR) -f tree -o $(TREES_DIR)/$@ $(DIR)/$*.yang
+	$(if $(findstring etsi,$@), $(eval AUGMENTS_DIR=$(SOL006_AUGMENTS_DIR)),$(eval AUGMENTS_DIR=))
+	$(Q)pyang $(PYANG_OPTIONS) --path $(DIR) -f tree -o $(TREES_DIR)/$@ $(DIR)/$*.yang $(AUGMENTS_DIR)
 
 %.html: $(TREES_DIR) yang-ietf
 	$(Q)echo generating $@ from $*.yang
 	$(if $(findstring etsi,$@), $(eval DIR=$(SOL006_MODEL_DIR)),$(eval DIR = $(MODEL_DIR)))
-	$(Q)pyang $(PYANG_OPTIONS) --path $(DIR) -f jstree -o $(TREES_DIR)/$@ $(DIR)/$*.yang
+	$(if $(findstring etsi,$@), $(eval AUGMENTS_DIR=$(SOL006_AUGMENTS_DIR)),$(eval AUGMENTS_DIR=))
+	$(Q)pyang $(PYANG_OPTIONS) --path $(DIR) -f jstree -o $(TREES_DIR)/$@ $(DIR)/$*.yang $(AUGMENTS_DIR)
 	$(Q)sed -r -i 's|data\:image/gif\;base64,R0lGODlhS.*RCAA7|https://osm.etsi.org/images/OSM-logo.png\" width=\"175\" height=\"60|g' $(TREES_DIR)/$@
 	$(Q)sed -r -i 's|<a href=\"http://www.tail-f.com">|<a href="http://osm.etsi.org">|g' $(TREES_DIR)/$@
 
