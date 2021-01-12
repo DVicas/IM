@@ -28,19 +28,19 @@ nsd:
           mgmt-network: "true"
 
       df:
-        - id: cirros_DF
+        - id: default-df
           vnf-profile:
-            - id: cirros_vnf1 # member-vnf-index-ref: 1
+            - id: "1" # member-vnf-index-ref: 1
               vnfd-id: cirros_vnfd
               virtual-link-connectivity:
                 - virtual-link-profile-id: cirros_2vnf_nsd_vld1
                   constituent-cpd-id:
-                    - constituent-base-element-id: cirros_vnf1
+                    - constituent-base-element-id: "1"
                       constituent-cpd-id: eth0-ext
-            - id: cirros_vnf2 # member-vnf-index-ref: 2
+            - id: "2" # member-vnf-index-ref: 2
               vnfd-id: cirros_vnfd
               virtual-link-connectivity:
                 - virtual-link-profile-id: cirros_2vnf_nsd_vld1
                   constituent-cpd-id:
-                    - constituent-base-element-id: cirros_vnf2
+                    - constituent-base-element-id: "2"
                       constituent-cpd-id: eth0-ext

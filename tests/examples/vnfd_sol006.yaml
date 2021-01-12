@@ -19,48 +19,70 @@ vnfd:
   id: vnfd
   mgmt-cp: vnf-mgmt-ext
 
+  sw-image-desc:
+    - id: ubuntu1804
+      image: ubuntu1804
+      name: ubuntu1804
+
   ext-cpd:
     - id: vnf-mgmt-ext
       int-cpd:
         vdu-id: mgmtVM
-        cpd: vnf-mgmt-int
+        cpd: mgmtVM-eth0-int
     - id: vnf-data-ext
       int-cpd:
         vdu-id: dataVM
-        cpd: vnf-data-int
+        cpd: dataVM-xe0-int
 
   int-virtual-link-desc:
     - id: internal
 
   vdu:
     - id: mgmtVM
+      sw-image-desc: ubuntu1804
       int-cpd:
-        - id: vnf-mgmt-int
+        - id: mgmtVM-eth0-int
           virtual-network-interface-requirement:
             - name: mgmtVM-eth0
-              position: "1"
+              position: 1
               virtual-interface:
                 type: VIRTIO
-        - id: mgmtVM-internal
+        - id: mgmtVM-eth1-int
           int-virtual-link-desc: internal
           virtual-network-interface-requirement:
             - name: mgmtVM-eth1
-              position: "2"
+              position: 2
               virtual-interface:
                 type: VIRTIO
 
     - id: dataVM
+      sw-image-desc: ubuntu1804
       int-cpd:
-        - id: dataVM-internal
+        - id: dataVM-eth0-int
           int-virtual-link-desc: internal
           virtual-network-interface-requirement:
             - name: dataVM-eth0
-              position: "1"
+              position: 1
               virtual-interface:
                 type: VIRTIO
-        - id: vnf-data-int
+        - id: dataVM-xe0-int
           virtual-network-interface-requirement:
             - name: dataVM-xe0
-              position: "2"
+              position: 2
               virtual-interface:
                 type: VIRTIO
+
+  df:
+    - id: default-df
+      instantiation-level:
+        - id: default-instantiation-level
+          vdu-level:
+            - number-of-instances: 1
+              vdu-id: mgmtVM
+            - number-of-instances: 1
+              vdu-id: dataVM
+      vdu-profile:
+        - id: mgmtVM
+          min-number-of-instances: 1
+        - id: dataVM
+          min-number-of-instances: 1

@@ -17,7 +17,7 @@
 
 vnfd:vnfd-catalog:
   vnfd:
-      id: vnfd
+    - id: vnfd
 
       mgmt-interface:
         cp: vnf-mgmt
@@ -44,6 +44,8 @@ vnfd:vnfd-catalog:
       vdu:
         - id: mgmtVM
 
+          image: ubuntu1804
+
           interface:
             - name: mgmtVM-eth0
               position: "1"
@@ -65,6 +67,8 @@ vnfd:vnfd-catalog:
               type: VPORT
 
         - id: dataVM
+
+          image: ubuntu1804
 
           interface:
             - name: dataVM-eth0

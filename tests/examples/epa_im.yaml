@@ -79,7 +79,7 @@ vnfd-catalog:
               virtual-interface:
                 bandwidth: "1000000"
                 type: PARAVIRT
-                vpci: 0000:00:0a.0
+                vpci: "0000:00:0a.0"
             - external-connection-point-ref: xe0
               name: xe0
               position: "2"

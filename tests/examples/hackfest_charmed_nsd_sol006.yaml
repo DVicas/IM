@@ -18,7 +18,6 @@ nsd:
     - id: hackfest3charmed-ns
       name: hackfest3charmed-ns
       description: NS with 2 VNFs hackfest3charmed-vnf connected by datanet and mgmtnet VLs
-      designer: OSM
       version: '1.0'
 
       vnfd-id:
@@ -26,32 +25,32 @@ nsd:
 
       virtual-link-desc:
         - id: mgmt
-          mgmt-network: "true"
+          mgmt-network: true
+          vim-network-name: mgmt
         - id: datanet
-          mgmt-network: "false"
 
       df:
-        - id: hackfest_charmed_DF
+        - id: default-df
           vnf-profile:
-            - id: hackfest_vnf1 # member-vnf-index-ref: 1
+            - id: "1" # member-vnf-index-ref: 1
               vnfd-id: hackfest3charmed-vnf
               virtual-link-connectivity:
                 - virtual-link-profile-id: mgmt
                   constituent-cpd-id:
-                    - constituent-base-element-id: hackfest_vnf1
+                    - constituent-base-element-id: "1"
                       constituent-cpd-id: vnf-mgmt-ext
                 - virtual-link-profile-id: datanet
                   constituent-cpd-id:
-                    - constituent-base-element-id: hackfest_vnf1
+                    - constituent-base-element-id: "1"
                       constituent-cpd-id: vnf-data-ext
-            - id: hackfest_vnf2 # member-vnf-index-ref: 2
+            - id: "2" # member-vnf-index-ref: 2
               vnfd-id: hackfest3charmed-vnf
               virtual-link-connectivity:
                 - virtual-link-profile-id: mgmt
                   constituent-cpd-id:
-                    - constituent-base-element-id: hackfest_vnf2
+                    - constituent-base-element-id: "2"
                       constituent-cpd-id: vnf-mgmt-ext
                 - virtual-link-profile-id: datanet
                   constituent-cpd-id:
-                    - constituent-base-element-id: hackfest_vnf2
+                    - constituent-base-element-id: "2"
                       constituent-cpd-id: vnf-data-ext

@@ -33,3 +33,4 @@ vnfd-catalog:
       kdu:
         - name: orc8r
           helm-chart: magma/orc8r
+          description: Facebook magma orc8r

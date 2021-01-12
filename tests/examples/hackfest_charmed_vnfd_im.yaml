@@ -41,8 +41,8 @@ vnfd:vnfd-catalog:
         cp: vnf-mgmt
       monitoring-param:
         - aggregation-type: AVERAGE
-          id: monitor1
-          name: monitor1
+          id: dataVM_cpu_util
+          name: dataVM_cpu_util
           vdu-monitoring-param:
             vdu-monitoring-param-ref: dataVM_cpu_util
             vdu-ref: dataVM
@@ -64,8 +64,9 @@ vnfd:vnfd-catalog:
                   scale-in-threshold: '15.0000000000'
                   scale-out-relational-operation: GE
                   scale-out-threshold: '60.0000000000'
-                  vnf-monitoring-param-ref: monitor1
+                  vnf-monitoring-param-ref: dataVM_cpu_util
               scaling-type: automatic
+              enabled: true
               threshold-time: 0
           vdu:
             - count: 1

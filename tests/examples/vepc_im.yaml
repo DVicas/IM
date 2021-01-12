@@ -24,7 +24,7 @@ vnfd:vnfd-catalog:
       mgmt-interface: # To mgmt-cp
         cp: spgwmme-mgmt
       ip-profiles: # To deployment flavour (DF)
-        - name: s6a
+        - name: s6a-fefe
           description: s6a network
           ip-profile-params:
             ip-version: ipv4
@@ -124,7 +124,7 @@ vnfd:vnfd-catalog:
               charm: hsscharm
       internal-vld:
         - id: s6a
-          ip-profile-ref: s6a
+          ip-profile-ref: s6a-fefe
           internal-connection-point:
             - id-ref: spgwmme-s6a
             - id-ref: hss-s6a

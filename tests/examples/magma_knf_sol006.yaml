@@ -14,22 +14,21 @@
 #  limitations under the License.
 
 vnfd:
-  id: fb_magma_knf
-  product-name: fb_magma_knf
   description: KNF with KDU using a helm-chart for Facebook magma orc8r
-  provider: ATOS
-  version: "1.0"
-  mgmt-cp: mgmt-ext
-
+  df:
+  - id: default-df
   ext-cpd:
-    - id: mgmt-ext
-      k8s-cluster-net: mgmtnet
-
+  - id: mgmt-ext
+    k8s-cluster-net: mgmtnet
+  id: fb_magma_knf
   k8s-cluster:
     nets:
-      - id: mgmtnet
-
+    - id: mgmtnet
   kdu:
-    - name: orc8r
-      helm-chart: magma/orc8r
-
+  - name: orc8r
+    helm-chart: magma/orc8r
+    description: Facebook magma orc8r
+  mgmt-cp: mgmt-ext
+  product-name: fb_magma_knf
+  provider: ATOS
+  version: '1.0'

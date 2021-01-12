@@ -22,27 +22,28 @@ vnfd:
   mgmt-cp: eth0-ext
 
   virtual-compute-desc:
-    - id: cirros-compute
+    - id: cirros_vnfd-VM-compute
       virtual-cpu:
         num-virtual-cpu: 1
       virtual-memory:
-        size: 0.256 # Memory size in GB
+        size: 0.25 # Memory size in GB
 
   virtual-storage-desc:
-    - id: cirros-storage
+    - id: cirros_vnfd-VM-storage
       size-of-storage: 2
 
   sw-image-desc:
     - id: cirros034
       name: cirros034
+      image: cirros034
 
   vdu:
     - id: cirros_vnfd-VM
       name: cirros_vnfd-VM
       description: cirros_vnfd-VM
-      virtual-compute-desc: cirros-compute
+      virtual-compute-desc: cirros_vnfd-VM-compute
       virtual-storage-desc:
-        - cirros-storage
+        - cirros_vnfd-VM-storage
       sw-image-desc: cirros034
       int-cpd:
         - id: eth0-int
@@ -54,12 +55,12 @@ vnfd:
                 vpci: 0000:00:0a.0
 
   df:
-    - id: cirros_default
+    - id: default-df
       vdu-profile:
         - id: cirros_vnfd-VM
           min-number-of-instances: 1
       instantiation-level:
-        - id: default
+        - id: default-instantiation-level
           vdu-level:
             - vdu-id: cirros_vnfd-VM
               number-of-instances: 1

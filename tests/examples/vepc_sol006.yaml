@@ -25,12 +25,12 @@ vnfd:
       virtual-cpu:
         num-virtual-cpu: 2
       virtual-memory:
-        size: 4 # Memory size in GB
+        size: 4.0 # Memory size in GB
     - id: hss-compute
       virtual-cpu:
         num-virtual-cpu: 1
       virtual-memory:
-        size: 2 # Memory size in GB
+        size: 2.0 # Memory size in GB
   virtual-storage-desc:
     - id: spgwmme-storage
       size-of-storage: 10
@@ -39,12 +39,11 @@ vnfd:
   sw-image-desc:
     - id: nextepc-spgwmme-base
       name: nextepc-spgwmme-base
-      checksum:
-        hash: # Mandatory?
-    - id: nextepc-hss-bas
-      name: nextepc-hss-bas
-      checksum:
-        hash: # Mandatory?
+      image: nextepc-spgwmme-base
+    - id: nextepc-hss-base
+      name: nextepc-hss-base
+      image: nextepc-hss-base
+
   vdu:
     - id: spgwmme
       name: spgwmme
@@ -55,27 +54,34 @@ vnfd:
         - spgwmme-storage
       sw-image-desc: nextepc-spgwmme-base
       int-cpd:
-        - id: spgwmme-mgmt-int
+        - id: eth0-int
           virtual-network-interface-requirement:
             - name: eth0
               virtual-interface:
                 type: PARAVIRT
-        - id: spgwmme-s1-int
+        - id: eth1-int
           virtual-network-interface-requirement:
             - name: eth1
               virtual-interface:
                 type: PARAVIRT
-        - id: spgwmme-sgi-int
+        - id: eth2-int
           virtual-network-interface-requirement:
             - name: eth2
               virtual-interface:
                 type: PARAVIRT
-        - id: spgwmme-s6a-int
+        - id: eth3-int
           int-virtual-link-desc: s6a # Connection to VLD!
           virtual-network-interface-requirement:
             - name: eth3
               virtual-interface:
                 type: PARAVIRT
+      monitoring-parameter:
+        - id: "spgw_cpu_util"
+          name: "spgw_cpu_util"
+          performance-metric: "cpu_utilization"
+        - id: "spgw_memory_util"
+          name: "spgw_memory_util"
+          performance-metric: "average_memory_utilization"
     - id: hss
       name: hss
       description: hss
@@ -83,30 +89,30 @@ vnfd:
       virtual-compute-desc: hss-compute
       virtual-storage-desc:
         - hss-storage
-      sw-image-desc: nextepc-hss-bas
+      sw-image-desc: nextepc-hss-base
       int-cpd:
-        - id: hss-mgmt-int
+        - id: eth0-int
           virtual-network-interface-requirement:
             - name: eth0
               virtual-interface:
                 type: PARAVIRT
-        - id: hss-s6a-int
+        - id: eth1-int
           int-virtual-link-desc: s6a # Connection to VLD!
           virtual-network-interface-requirement:
             - name: eth1
               virtual-interface:
                 type: PARAVIRT
   df:
-    - id: vepc_default
-      vnf-configuration-id: vnf-configuration-example
+    - id: default-df
+      vnf-configuration-id: default-vnf-configuration
       vdu-profile:
         - id: spgwmme
           min-number-of-instances: 1
         - id: hss
           min-number-of-instances: 1
-          vdu-configuration-id: vdu-configuration-example
+          vdu-configuration-id: hss-vdu-configuration
       instantiation-level:
-        - id: default
+        - id: default-instantiation-level
           vdu-level:
             - vdu-id: spgwmme
               number-of-instances: 1
@@ -114,31 +120,16 @@ vnfd:
               number-of-instances: 1
       virtual-link-profile:
         - id: s6a
-          flavour:
+          flavour: ""
           virtual-link-protocol-data:
             l3-protocol-data:
-              name: s6a
+              name: s6a-l3-protocol-data
               description: s6a network
               ip-version: ipv4
               cidr: 10.0.6.0/24
               dhcp-enabled: true
-      monitoring-parameter:
-        - id: "spgw_cpu_util"
-          name: "spgw_cpu_util"
-          performance-metric: "cpu_load"
-          collection-period: 123456
-          #aggregation-type: AVERAGE # Not included in augments
-          #vdu-monitoring-param: # Not included in augments
-          #  vdu-ref: "spgwmme" # Not included in augments
-          #  vdu-monitoring-param-ref: "spgw_cpu_util" # Not included in augments
-        - id: "spgw_memory_util"
-          name: "spgw_memory_util"
-          #aggregation-type: AVERAGE # Not included in augments
-          #vdu-monitoring-param: # Not included in augments
-          #  vdu-ref: "spgwmme" # Not included in augments
-          #  vdu-monitoring-param-ref: "spgw_memory_util" # Not included in augments
   vdu-configuration:
-    - id: vdu-configuration-example
+    - id: hss-vdu-configuration
       initial-config-primitive:
         - seq: "1"
           name: config
@@ -163,7 +154,7 @@ vnfd:
       juju:
         charm: hsscharm
   vnf-configuration:
-    - id: vnf-configuration-example
+    - id: default-vnf-configuration
       initial-config-primitive:
         - seq: "1"
           name: config
@@ -203,17 +194,17 @@ vnfd:
     - id: spgwmme-mgmt-ext
       int-cpd: # Connection to int-cpd
         vdu-id: spgwmme
-        cpd: spgwmme-mgmt-int
+        cpd: eth0-int
     - id: spgwmme-s1-ext
       int-cpd: # Connection to int-cpd
         vdu-id: spgwmme
-        cpd: spgwmme-mgmt-int
+        cpd: eth1-int
     - id: spgwmme-sgi-ext
       int-cpd: # Connection to int-cpd
         vdu-id: spgwmme
-        cpd: spgwmme-mgmt-int
+        cpd: eth2-int
     # HSS
     - id: hss-mgmt-ext
       int-cpd: # Connection to int-cpd
-        vdu-id: spgwmme
-        cpd: spgwmme-mgmt-int
+        vdu-id: hss
+        cpd: eth0-int

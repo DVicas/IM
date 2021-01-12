@@ -23,43 +23,44 @@ vnfd:
   mgmt-cp: vnf-mgmt-ext
 
   virtual-compute-desc:
-    - id: mgmt-compute
+    - id: mgmtVM-compute
       virtual-cpu:
         num-virtual-cpu: 1
       virtual-memory:
         size: 1
-    - id: data-compute
+    - id: dataVM-compute
       virtual-cpu:
         num-virtual-cpu: 1
       virtual-memory:
         size: 1
 
   virtual-storage-desc:
-    - id: mgmt-storage
+    - id: mgmtVM-storage
       size-of-storage: 10
-    - id: data-storage
+    - id: dataVM-storage
       size-of-storage: 10
 
   sw-image-desc:
     - id: hackfest3-mgmt
       name: hackfest3-mgmt
+      image: hackfest3-mgmt
 
   vdu:
     - id: mgmtVM
       name: mgmtVM
       cloud-init-file: cloud-config.txt
       sw-image-desc: hackfest3-mgmt
-      virtual-compute-desc: mgmt-compute
+      virtual-compute-desc: mgmtVM-compute
       virtual-storage-desc:
-        - mgmt-storage
+        - mgmtVM-storage
       int-cpd:
-        - id: vnf-mgmt
+        - id: mgmtVM-eth0-int
           virtual-network-interface-requirement:
             - name: mgmtVM-eth0
               position: 1
               virtual-interface:
                 type: VIRTIO
-        - id: mgmtVM-internal
+        - id: mgmtVM-eth1-int
           int-virtual-link-desc: internal
           virtual-network-interface-requirement:
             - name: mgmtVM-eth1
@@ -69,20 +70,20 @@ vnfd:
     - id: dataVM
       name: dataVM
       sw-image-desc: hackfest3-mgmt
-      virtual-compute-desc: data-compute
+      virtual-compute-desc: dataVM-compute
       virtual-storage-desc:
-        - data-storage
+        - dataVM-storage
       int-cpd:
-        - id: dataVM-internal
+        - id: dataVM-eth0-int
           int-virtual-link-desc: internal
           virtual-network-interface-requirement:
-            - name: dataVM-eth1
+            - name: dataVM-eth0
               position: 1
               virtual-interface:
                 type: VIRTIO
-        - id: vnf-data
+        - id: dataVM-xe0-int
           virtual-network-interface-requirement:
-            - name: dataVM-eth0
+            - name: dataVM-xe0
               position: 2
               virtual-interface:
                 type: VIRTIO
@@ -98,24 +99,23 @@ vnfd:
     - id: vnf-mgmt-ext
       int-cpd: # Connection to int-cpd
         vdu-id: mgmtVM
-        cpd: vnf-mgmt
+        cpd: mgmtVM-eth0-int
     - id: vnf-data-ext
       int-cpd: # Connection to int-cpd
         vdu-id: dataVM
-        cpd: vnf-data
+        cpd: dataVM-xe0-int
 
   df:
-    - id: hackfest_default
-      vnf-configuration-id: vnf-configuration-example
+    - id: default-df
+      vnf-configuration-id: default-vnf-configuration
       vdu-profile:
         - id: mgmtVM
           min-number-of-instances: 1
         - id: dataVM
           min-number-of-instances: 1
-          max-number-of-instances: 10
-          vdu-configuration-id: vdu-configuration-example
+          max-number-of-instances: 11
       instantiation-level:
-        - id: default
+        - id: default-instantiation-level
           vdu-level:
             - vdu-id: mgmtVM
               number-of-instances: 1
@@ -127,9 +127,9 @@ vnfd:
           max-scale-level: 10
           aspect-delta-details:
             deltas:
-              - id: delta1
+              - id: scale_dataVM-delta
                 vdu-delta:
-                  - id: vdudelta1
+                  - id: dataVM
                     number-of-instances: 1
           scaling-policy:
             - name: auto_cpu_util_above_threshold
@@ -151,7 +151,7 @@ vnfd:
               vnf-config-primitive-name-ref: touch
 
   vnf-configuration:
-    - id: vnf-configuration-example
+    - id: default-vnf-configuration
       initial-config-primitive:
         - seq: "1"
           name: config
