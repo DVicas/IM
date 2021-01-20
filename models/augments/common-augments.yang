@@ -274,7 +274,7 @@ module common-augments {
                           ";
                         type string;
                     }
-                    leaf connection-point-ref {
+                    leaf external-connection-point-ref {
                         description
                           "String representing a leaf reference to the particular external connection point
                            This field should match /vnfd:vnfd-catalog/vnfd:vnfd/vnfd:id/vnfd:connection-point/vnfd:name
