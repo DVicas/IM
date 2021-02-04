@@ -24,6 +24,10 @@ module interface {
         prefix vnfd;
     }
 
+    import ietf-inet-types {
+        prefix inet;
+    }
+
     import common-augments {
         prefix common;
     }
@@ -37,6 +41,12 @@ module interface {
               "Explicit Position of the interface within the list";
             type uint32;
         }
+
+        leaf ip-address {
+            description
+              "IP address of the internal connection point";
+            type inet:ip-address;
+          }
 
         leaf mac-address {
             description
