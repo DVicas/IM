@@ -107,7 +107,6 @@ vnfd:
 
   df:
     - id: default-df
-      vnf-configuration-id: default-vnf-configuration
       vdu-profile:
         - id: mgmtVM
           min-number-of-instances: 1
@@ -149,29 +148,30 @@ vnfd:
               vnf-config-primitive-name-ref: touch
             - trigger: pre-scale-in
               vnf-config-primitive-name-ref: touch
-
-  vnf-configuration:
-    - id: default-vnf-configuration
-      initial-config-primitive:
-        - seq: "1"
-          name: config
-          parameter:
-            - name: ssh-hostname
-              value: <rw_mgmt_ip>
-            - name: ssh-username
-              value: ubuntu
-            - name: ssh-password
-              value: osm4u
-        - seq: "2"
-          name: touch
-          parameter:
-            - name: filename
-              value: <touch_filename>
-      config-primitive:
-        - name: touch
-          parameter:
-            - data-type: STRING
-              default-value: <touch_filename2>
-              name: filename
-      juju:
-        charm: simple
+      lcm-operations-configuration:
+        operate-vnf-op-config:
+          day1-2:
+          - id: hackfest3charmed-vnf
+            initial-config-primitive:
+              - seq: "1"
+                name: config
+                parameter:
+                  - name: ssh-hostname
+                    value: <rw_mgmt_ip>
+                  - name: ssh-username
+                    value: ubuntu
+                  - name: ssh-password
+                    value: osm4u
+              - seq: "2"
+                name: touch
+                parameter:
+                  - name: filename
+                    value: <touch_filename>
+            config-primitive:
+              - name: touch
+                parameter:
+                  - data-type: STRING
+                    default-value: <touch_filename2>
+                    name: filename
+            juju:
+              charm: simple

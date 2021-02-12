@@ -104,13 +104,11 @@ vnfd:
                 type: PARAVIRT
   df:
     - id: default-df
-      vnf-configuration-id: default-vnf-configuration
       vdu-profile:
         - id: spgwmme
           min-number-of-instances: 1
         - id: hss
           min-number-of-instances: 1
-          vdu-configuration-id: hss-vdu-configuration
       instantiation-level:
         - id: default-instantiation-level
           vdu-level:
@@ -128,65 +126,66 @@ vnfd:
               ip-version: ipv4
               cidr: 10.0.6.0/24
               dhcp-enabled: true
-  vdu-configuration:
-    - id: hss-vdu-configuration
-      initial-config-primitive:
-        - seq: "1"
-          name: config
-          parameter:
-            - name: ssh-hostname
-              value: <rw_mgmt_ip>
-            - name: ssh-username
-              value: ubuntu
-            - name: ssh-password
-              value: <password>
-        - seq: "2"
-          name: configure-hss
-          parameter:
-            - name: spgw-ip
-              data-type: STRING
-              value: <spgw_ip>
-            - name: hss-ip
-              data-type: STRING
-              value: <hss_ip>
-        - seq: "3"
-          name: restart-hss
-      juju:
-        charm: hsscharm
-  vnf-configuration:
-    - id: default-vnf-configuration
-      initial-config-primitive:
-        - seq: "1"
-          name: config
-          parameter:
-            - name: ssh-hostname
-              value: <rw_mgmt_ip>
-            - name: ssh-username
-              value: ubuntu
-            - name: ssh-password
-              value: <password>
-        - seq: "2"
-          name: configure-spgw
-          parameter:
-            - name: spgw-ip
-              data-type: STRING
-              value: <spgw_ip>
-            - name: hss-ip
-              data-type: STRING
-              value: <hss_ip>
-        - seq: "3"
-          name: restart-spgw
-      config-primitive:
-        - name: add-route
-          parameter:
-            - name: external-prefix
-              data-type: STRING
-              default-value: "8.8.8.8/32"
-            - name: next-hop
-              data-type: STRING
-              default-value: "192.168.2.1"
-      juju:
-        charm: spgwcharm
+      lcm-operations-configuration:
+        operate-vnf-op-config:
+          day1-2:
+          - id: vEPC_vnfd
+            initial-config-primitive:
+              - seq: "1"
+                name: config
+                parameter:
+                  - name: ssh-hostname
+                    value: <rw_mgmt_ip>
+                  - name: ssh-username
+                    value: ubuntu
+                  - name: ssh-password
+                    value: <password>
+              - seq: "2"
+                name: configure-spgw
+                parameter:
+                  - name: spgw-ip
+                    data-type: STRING
+                    value: <spgw_ip>
+                  - name: hss-ip
+                    data-type: STRING
+                    value: <hss_ip>
+              - seq: "3"
+                name: restart-spgw
+            config-primitive:
+              - name: add-route
+                parameter:
+                  - name: external-prefix
+                    data-type: STRING
+                    default-value: "8.8.8.8/32"
+                  - name: next-hop
+                    data-type: STRING
+                    default-value: "192.168.2.1"
+            juju:
+              charm: spgwcharm
+          - id: hss
+            initial-config-primitive:
+              - seq: "1"
+                name: config
+                parameter:
+                  - name: ssh-hostname
+                    value: <rw_mgmt_ip>
+                  - name: ssh-username
+                    value: ubuntu
+                  - name: ssh-password
+                    value: <password>
+              - seq: "2"
+                name: configure-hss
+                parameter:
+                  - name: spgw-ip
+                    data-type: STRING
+                    value: <spgw_ip>
+                  - name: hss-ip
+                    data-type: STRING
+                    value: <hss_ip>
+              - seq: "3"
+                name: restart-hss
+            juju:
+              charm: hsscharm    
   int-virtual-link-desc:
     - id: s6a
   ext-cpd:

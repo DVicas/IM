@@ -24,10 +24,6 @@ module kdu {
         prefix vnfd;
     }
 
-    import common-augments {
-        prefix common;
-    }
-
     grouping extended-ext-cpd {
         leaf k8s-cluster-net {
             description
@@ -36,24 +32,6 @@ module kdu {
                Descriptor (CPD) connect.";
             type leafref {
                 path "/vnfd:vnfd/kdu:k8s-cluster/kdu:nets/kdu:id";
-            }
-        }
-    }
-
-    grouping extended-kdu-configuration {
-        container kdu-configuration {
-            uses common:vnfc-configuration;
-            uses common:vdu-config-access;
-
-            leaf-list blacklist-config-primitive {
-                description
-                  "List of blacklisted config primitives from the list of
-                   default kdu config primitives";
-
-                type enumeration {
-                    enum upgrade;
-                    enum rollback;
-                }
             }
         }
     }
@@ -116,9 +94,6 @@ module kdu {
                     }
                 }
             }
-
-            uses extended-kdu-configuration;
-
         }
 
         container k8s-cluster {

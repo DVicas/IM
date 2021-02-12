@@ -286,7 +286,7 @@ def _add_im_vdus_to_sol006_vnfd(im_vnfd, sol006_vnfd):
         vdu_level = _get_instantiation_level_vdu_level_from_im_vdu(vdu)
         if vdu.get("vdu-configuration"):
             vdu_configuration = vdu["vdu-configuration"]
-            vdu_configuration["id"] = "{}-vdu-configuration".format(vdu["id"])
+            vdu_configuration["id"] = vdu["id"]
             vdu_configurations.append(vdu_configuration)
         df["vdu-profile"].append(vdu_profile)
         df["instantiation-level"][0]["vdu-level"].append(vdu_level)
@@ -299,7 +299,8 @@ def _add_im_vdus_to_sol006_vnfd(im_vnfd, sol006_vnfd):
     if len(ext_cpds) > 0:
         sol006_vnfd["ext-cpd"] = ext_cpds
     if len(vdu_configurations) > 0:
-        sol006_vnfd["vdu-configuration"] = vdu_configurations
+        _prepare_dict_entries_for_configurations(sol006_vnfd)
+        sol006_vnfd["df"][0]["lcm-operations-configuration"]["operate-vnf-op-config"]["day1-2"].extend(vdu_configurations)
 
 
 def _add_im_vdu_images_to_sol006_vdu(im_vdu, sol006_vdu):
@@ -365,8 +366,6 @@ def _get_vdu_profile_from_im_vdu(im_vdu, im_vnfd):
                 sgd_min_instances = int(scaling_group_descriptor.get("min-instance-count", 0))
                 vdu_profile["min-number-of-instances"] = sgd_min_instances + initial_instances
                 vdu_profile["max-number-of-instances"] = sgd_max_instances + initial_instances
-    if im_vdu.get("vdu-configuration"):
-        vdu_profile["vdu-configuration-id"] = "{}-vdu-configuration".format(im_vdu["id"])
     return vdu_profile
 
 
@@ -409,14 +408,22 @@ def _add_im_internal_vld_connection_point_refs_to_sol006_vnfd(ivld, im_vnfd, sol
                 if int_cpd["id"] == sol006_int_cpd_id:
                     int_cpd["int-virtual-link-desc"] = ivld["id"]
 
+def _prepare_dict_entries_for_configurations(sol006_vnfd):
+    sol006_vnfd["df"] = sol006_vnfd.get("df", [{}])
+    if not sol006_vnfd["df"][0].get("lcm-operations-configuration"):
+        sol006_vnfd["df"][0]["lcm-operations-configuration"] = {
+            "operate-vnf-op-config": {
+                "day1-2": []
+            }
+        }
 
 def _add_im_vnf_configuration_to_sol006_vnfd(im_vnfd, sol006_vnfd):
     vnf_configuration = im_vnfd.get("vnf-configuration")
     if not vnf_configuration:
         return
-    vnf_configuration["id"] = "default-vnf-configuration"
-    sol006_vnfd["vnf-configuration"] = [vnf_configuration]
-    sol006_vnfd["df"][0]["vnf-configuration-id"] = vnf_configuration["id"]
+    vnf_configuration["id"] = im_vnfd.get("id")
+    _prepare_dict_entries_for_configurations(sol006_vnfd)
+    sol006_vnfd["df"][0]["lcm-operations-configuration"]["operate-vnf-op-config"]["day1-2"].append(vnf_configuration)
 
 
 def _add_im_ip_profiles_to_sol006_vnfd(im_vnfd, sol006_vnfd):
@@ -513,8 +520,18 @@ def _add_im_scaling_group_descriptors_to_sol006_vnfd(im_vnfd, sol006_vnfd):
 def _add_im_kdus_to_sol006_vnfd(im_vnfd, sol006_vnfd):
     if im_vnfd.get("kdu"):
         sol006_vnfd["kdu"] = im_vnfd["kdu"]
+        kdu_configs = []
+        for a_kdu in sol006_vnfd["kdu"]:
+            if "kdu-configuration" in a_kdu:
+                kdu_config = a_kdu.pop("kdu-configuration")
+                kdu_config["id"] = a_kdu["name"]
+                kdu_configs.append(kdu_config)
         if len(sol006_vnfd.get("df", ())) == 0:
             sol006_vnfd["df"] = [{"id": "default-df"}]
+        if len(kdu_configs) > 0:
+            _prepare_dict_entries_for_configurations(sol006_vnfd)
+            sol006_vnfd["df"][0]["lcm-operations-configuration"]["operate-vnf-op-config"]["day1-2"].extend(kdu_configs)
+
 
 
 def _add_im_k8s_clusters_to_sol006_vnfd(im_vnfd, sol006_vnfd):

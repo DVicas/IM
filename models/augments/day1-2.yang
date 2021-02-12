@@ -29,37 +29,31 @@ module day1-2 {
     }
 
     grouping extended-vnf-configuration {
-        list vnf-configuration {
+        list day1-2 {
             key "id";
             leaf id {
                 description
-                  "Internal identifier for the VNF configuration";
+                  "Internal identifier for the VNF/VDU/KNF/KDU configuration";
                 type string;
             }
             uses common:vnfc-configuration;
             uses common:vnfc-relations;
             uses common:vdu-config-access;
-        }
-    }
 
-    grouping extended-vdu-configuration {
-        list vdu-configuration {
-            key "id";
-            leaf id {
+            leaf-list blacklist-config-primitive {
                 description
-                  "Internal identifier for the VDU configuration";
-                type string;
+                  "List of blacklisted config primitives from the list of
+                   default kdu config primitives";
+
+                type enumeration {
+                    enum upgrade;
+                    enum rollback;
+                }
             }
-            uses common:vnfc-configuration;
-            uses common:vdu-config-access;
         }
     }
 
-    augment "/vnfd:vnfd" {
+    augment "/vnfd:vnfd/vnfd:df/vnfd:lcm-operations-configuration/vnfd:operate-vnf-op-config" {
         uses extended-vnf-configuration;
-    }
-
-    augment "/vnfd:vnfd" {
-        uses extended-vdu-configuration;
     }
 }

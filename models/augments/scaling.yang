@@ -156,7 +156,7 @@ module scaling {
                 description
                   "Reference to the VNF config primitive";
                 type leafref {
-                    path "/vnfd:vnfd/day1-2:vnf-configuration/day1-2:config-primitive/day1-2:name";
+                    path "/vnfd:vnfd/vnfd:df/vnfd:lcm-operations-configuration/vnfd:operate-vnf-op-config/day1-2:day1-2/day1-2:config-primitive/day1-2:name";
                 }
             }
         }
