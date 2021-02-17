@@ -16,6 +16,5 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-make clean
-make models
-tox
+OUTPUT=$(TOX_PARALLEL_NO_SPINNER=1 tox --parallel=auto)
+printf "$OUTPUT"

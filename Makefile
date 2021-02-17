@@ -1,13 +1,13 @@
 # Copyright 2017 Sandvine
 # Copyright 2017-2018 Telefonica
 # All Rights Reserved.
-# 
+#
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
 #    a copy of the License at
-# 
+#
 #         http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 #    Unless required by applicable law or agreed to in writing, software
 #    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -105,17 +105,11 @@ yang2swagger:
 	mvn -f yang2swagger/pom.xml clean install
 
 package:
-	tox -e build
 	./build-docs.sh
 
 deps:
-	$(Q)sudo apt-get -y install git make wget python python-pip debhelper dh-make tox python3 python3-pip maven
-	$(Q)sudo -H python3 -m pip install -U pip
-	$(Q)sudo -H python2 -m pip install -U pip
-	$(Q)sudo -H python3 -m pip install -U pyang pyangbind stdeb
-	$(Q)sudo -H python2 -m pip install -U pyang pyangbind stdeb
-	$(Q)mkdir -p ~/.m2
-	$(Q)cp -n ~/.m2/settings.xml ~/.m2/settings.xml.orig ; wget -q -O - https://raw.githubusercontent.com/opendaylight/odlparent/master/settings.xml > ~/.m2/settings.xml
+	$(Q)mkdir -p ${HOME}/.m2
+	$(Q)cp -n ${HOME}/.m2/settings.xml ${HOME}/.m2/settings.xml.orig ; wget -q -O - https://raw.githubusercontent.com/opendaylight/odlparent/master/settings.xml > ${HOME}/.m2/settings.xml
 
 sol006_deps:
 	$(Q)git clone --single-branch --branch v2.6.1 https://forge.etsi.org/rep/nfv/SOL006.git sol006_model
