@@ -269,6 +269,8 @@ def _add_im_vdus_to_sol006_vnfd(im_vnfd, sol006_vnfd):
             vdu_descriptor["name"] = vdu["name"]
         if vdu.get("cloud-init-file"):
             vdu_descriptor["cloud-init-file"] = vdu["cloud-init-file"]
+        if vdu.get("cloud-init"):
+            vdu_descriptor["cloud-init"] = vdu["cloud-init"]
         if vdu.get("supplemental-boot-data"):
             vdu_descriptor["supplemental-boot-data"] = vdu["supplemental-boot-data"]
         if vdu.get("alarm"):
