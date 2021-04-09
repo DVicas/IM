@@ -16,14 +16,22 @@ venv
 .tox
 
 *.pyc
+*.pyo
 .cache
+.tox
 
 #IDEs
 .idea
 .project
 .pydevproject
 .settings/
+.vscode
 
+# Unit test / coverage reports
+.coverage
+cover
+coverage.xml
+nosetests.xml
 
 #Generated folders when building the deb package locally
 debian/osm-imdocs.install

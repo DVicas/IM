@@ -35,6 +35,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 RUN python3 -m easy_install pip==21.0.1
 RUN pip3 install tox==3.22.0
 
-RUN DEBIAN_FRONTEND=noninteractive apt -y install wget build-essential dh-make \
-                                            openjdk-8-jdk maven
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install wget build-essential dh-make \
+                                              openjdk-8-jdk maven
 RUN update-java-alternatives --set /usr/lib/jvm/java-1.8.0-openjdk-amd64
