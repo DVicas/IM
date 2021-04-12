@@ -27,7 +27,8 @@ VNFD_FILES = [
     'hackfest_charmed_vnfd_sol006.yaml',
     'magma_knf_sol006.yaml',
     'vepc_sol006.yaml',
-    'vnfd_sol006.yaml'
+    'vnfd_sol006.yaml',
+    'vnfd_sol006_k8s_scale.yaml',
 ]
 
 NSD_FILES = [

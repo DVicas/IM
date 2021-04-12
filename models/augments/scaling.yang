@@ -32,6 +32,10 @@ module scaling {
         prefix day1-2;
     }
 
+    import kdu {
+        prefix kdu;
+    }
+
     grouping extended-scaling {
         list scaling-policy {
 
@@ -162,7 +166,83 @@ module scaling {
         }
     }
 
+    grouping extended-kdu-resource-profile {
+      list kdu-resource-profile {
+        key "id";
+        description
+          "The Kdu resource profile describes additional instantiation data for
+           a given KDU used in a deployment flavour.";
+
+        leaf id {
+          type string;
+        }
+
+        leaf min-number-of-instances {
+          type uint16;
+          default 1;
+          description
+            "Minimum number of instances of the KNFC based on this
+             KDU resource that is permitted to exist for this flavour.";
+        }
+
+        leaf max-number-of-instances {
+          type uint16;
+          default 1;
+          must ". >= ../min-number-of-instances";
+        }
+
+        leaf resource-name {
+          type string;
+          description
+            "Name of the application of KDU";
+        }
+
+        leaf kdu-name {
+          type leafref {
+            path "/vnfd:vnfd/kdu:kdu/kdu:name";
+          }
+          description
+            "Name of the KDU";
+        }
+      }
+    }
+
+    grouping extended-deltas {
+      list kdu-resource-delta {
+        key "id";
+        description
+          "The number of KNFC instances based on particular
+            KDUs to be created or removed.";
+
+        leaf id {
+          type leafref {
+            path "../../../../../kdu-resource-profile/id";
+          }
+          description
+            "Uniquely identifies a KDU profile.";
+        }
+
+        leaf number-of-instances {
+          type uint32 {
+            range "0..max";
+          }
+          description
+            "Number of instances of KNFC based on this KDU to
+              deploy for an instantiation level or for a
+              scaling delta. Shall be zero or greater.";
+        }
+      }
+    }
+
+    augment "/vnfd:vnfd/vnfd:df" {
+        uses extended-kdu-resource-profile;
+    }
+
     augment "/vnfd:vnfd/vnfd:df/vnfd:scaling-aspect" {
         uses extended-scaling;
+    }
+
+    augment "/vnfd:vnfd/vnfd:df/vnfd:scaling-aspect/vnfd:aspect-delta-details/vnfd:deltas" {
+        uses extended-deltas;
     }
 }
