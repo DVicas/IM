@@ -16,6 +16,10 @@
 
 #IDEs
 .idea
+.project
+.pydevproject
+.settings/
+
 
 #Generated folders when building the deb package locally
 debian/osm-imdocs.install
