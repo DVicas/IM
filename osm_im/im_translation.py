@@ -61,6 +61,7 @@ def translate_im_vnfd_to_sol006(im_vnfd):
     _add_im_kdus_to_sol006_vnfd(im_vnfd, sol006_vnfd)
     _add_im_k8s_clusters_to_sol006_vnfd(im_vnfd, sol006_vnfd)
     _add_im_placement_groups_to_sol006_vnfd(im_vnfd, sol006_vnfd)
+    _cleanup_juju_in_configurations(sol006_vnfd)
     return {"vnfd": sol006_vnfd}
 
 
@@ -416,6 +417,35 @@ def _prepare_dict_entries_for_configurations(sol006_vnfd):
                 "day1-2": []
             }
         }
+
+def _cleanup_juju_in_configurations(sol006_vnfd):
+    configs = sol006_vnfd["df"][0].get("lcm-operations-configuration")
+    if configs:
+        for day12_config in configs["operate-vnf-op-config"]["day1-2"]:
+            if "juju" in day12_config:
+                ee_name = _create_execution_environment_for_juju(day12_config, day12_config["juju"]["charm"])
+                for primitive in day12_config.get("config-primitive", []):
+                    primitive["execution-environment-ref"] = ee_name
+                for primitive in day12_config.get("initial-config-primitive", []):
+                    primitive["execution-environment-ref"] = ee_name
+                for primitive in day12_config.get("terminate-config-primitive", []):
+                    primitive["execution-environment-ref"] = ee_name
+                day12_config.pop("juju", None)
+
+def _create_execution_environment_for_juju(day12_config, charm_name):
+    if not "execution-environment-list" in day12_config:
+        day12_config["execution-environment-list"] = []
+
+    day12_config["execution-environment-list"].append(
+        {
+            "id": charm_name + "-ee",
+            "juju": {
+                "charm": charm_name
+            }
+        }
+    )
+
+    return charm_name + "-ee"
 
 def _add_im_vnf_configuration_to_sol006_vnfd(im_vnfd, sol006_vnfd):
     vnf_configuration = im_vnfd.get("vnf-configuration")

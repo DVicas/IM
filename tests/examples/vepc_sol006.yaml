@@ -130,6 +130,10 @@ vnfd:
         operate-vnf-op-config:
           day1-2:
           - id: vEPC_vnfd
+            execution-environment-list:
+            - id: spgwcharm-ee
+              juju:
+                charm: spgwcharm
             initial-config-primitive:
               - seq: "1"
                 name: config
@@ -140,6 +144,7 @@ vnfd:
                     value: ubuntu
                   - name: ssh-password
                     value: <password>
+                execution-environment-ref: spgwcharm-ee
               - seq: "2"
                 name: configure-spgw
                 parameter:
@@ -149,8 +154,10 @@ vnfd:
                   - name: hss-ip
                     data-type: STRING
                     value: <hss_ip>
+                execution-environment-ref: spgwcharm-ee
               - seq: "3"
                 name: restart-spgw
+                execution-environment-ref: spgwcharm-ee
             config-primitive:
               - name: add-route
                 parameter:
@@ -160,11 +167,15 @@ vnfd:
                   - name: next-hop
                     data-type: STRING
                     default-value: "192.168.2.1"
-            juju:
-              charm: spgwcharm
+                execution-environment-ref: spgwcharm-ee
           - id: hss
+            execution-environment-list:
+            - id: hsscharm-ee
+              juju:
+                charm: hsscharm
             initial-config-primitive:
               - seq: "1"
+                execution-environment-ref: hsscharm-ee
                 name: config
                 parameter:
                   - name: ssh-hostname
@@ -182,10 +193,10 @@ vnfd:
                   - name: hss-ip
                     data-type: STRING
                     value: <hss_ip>
+                execution-environment-ref: hsscharm-ee
               - seq: "3"
                 name: restart-hss
-            juju:
-              charm: hsscharm    
+                execution-environment-ref: hsscharm-ee
   int-virtual-link-desc:
     - id: s6a
   ext-cpd:

@@ -152,8 +152,13 @@ vnfd:
         operate-vnf-op-config:
           day1-2:
           - id: hackfest3charmed-vnf
+            execution-environment-list:
+            - id: simple-ee
+              juju:
+                charm: simple
             initial-config-primitive:
               - seq: "1"
+                execution-environment-ref: simple-ee
                 name: config
                 parameter:
                   - name: ssh-hostname
@@ -163,15 +168,15 @@ vnfd:
                   - name: ssh-password
                     value: osm4u
               - seq: "2"
+                execution-environment-ref: simple-ee
                 name: touch
                 parameter:
                   - name: filename
                     value: <touch_filename>
             config-primitive:
               - name: touch
+                execution-environment-ref: simple-ee
                 parameter:
                   - data-type: STRING
                     default-value: <touch_filename2>
                     name: filename
-            juju:
-              charm: simple
