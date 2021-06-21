@@ -46,7 +46,7 @@ all: models trees openapi_schemas
 
 models: sol006_deps $(PYTHON_MODELS) rename_etsi_nfv_py
 
-trees: $(YANG_DESC_TREES) $(YANG_DESC_JSTREES) $(YANG_RECORD_TREES) $(YANG_RECORD_JSTREES)
+trees: $(YANG_DESC_TREES) $(YANG_DESC_JSTREES)
 
 openapi_schemas: $(OPENAPI_SCHEMAS)
 
