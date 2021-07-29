@@ -18,8 +18,7 @@ import importlib
 from osm_im.vnfd import vnfd as vnfd_im
 from osm_im.nsd import nsd as nsd_im
 from osm_im.nst import nst as nst_im
-etsi_nfv_vnfd = importlib.import_module("osm_im.etsi-nfv-vnfd")
-etsi_nfv_nsd = importlib.import_module("osm_im.etsi-nfv-nsd")
+from osm_im import etsi_nfv_vnfd, etsi_nfv_nsd
 from pyangbind.lib.serialise import pybindJSONDecoder
 import pyangbind.lib.pybindJSON as pybindJSON
 

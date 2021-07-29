@@ -11,6 +11,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+venv
+
+.tox
+
 *.pyc
 .cache
 
@@ -40,7 +44,10 @@ osm_im/nst.py
 osm_im/nsi.py
 osm_im/osm.yaml
 osm_im/etsi-nfv-nsd.py
+osm_im/etsi_nfv_nsd.py
 osm_im/etsi-nfv-vnfd.py
+osm_im/etsi_nfv_vnfd.py
+sol006_model
 
 #Pyang and other tools' folders
 pyangbind

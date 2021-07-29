@@ -35,11 +35,23 @@ class Install_osm_im(install):
         import pyangbind
         print("Using dir {}/{} for python artifacts".format(os.getcwd(), self.im_dir))
         path = "{}/{}".format(os.getcwd(), self.im_dir)
+
         protoc_command = ["make", "models"]
         if subprocess.call(protoc_command) != 0:
             sys.exit(-1)
+
         # To ensure generated files are copied to the python installation folder
-        self.copy_tree(self.im_dir, "{}{}".format(self.install_lib, self.im_dir))
+        install_path = "{}{}".format(self.install_lib, self.im_dir)
+        self.copy_tree(self.im_dir, install_path)
+        if os.path.isfile("{}/etsi-nfv-nsd.py".format(install_path)):
+            self.move_file(
+                "{}/etsi-nfv-nsd.py".format(install_path), "{}/etsi_nfv_nsd.py".format(install_path)
+            )
+        if os.path.isfile("{}/etsi-nfv-vnfd.py".format(install_path)):
+            self.move_file(
+                "{}/etsi-nfv-vnfd.py".format(install_path), "{}/etsi_nfv_vnfd.py".format(install_path)
+            )
+
         install.run(self)
 
 

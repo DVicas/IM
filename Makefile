@@ -44,7 +44,7 @@ PYANG_OPTIONS := -Werror
 all: models trees openapi_schemas
 	$(MAKE) package
 
-models: sol006_deps $(PYTHON_MODELS)
+models: sol006_deps $(PYTHON_MODELS) rename_etsi_nfv_py
 
 trees: $(YANG_DESC_TREES) $(YANG_DESC_JSTREES) $(YANG_RECORD_TREES) $(YANG_RECORD_JSTREES)
 
@@ -89,7 +89,7 @@ $(TREES_DIR):
 
 osm.yaml: yang-ietf yang2swagger
 	$(Q)echo generating $@
-	$(Q)$(JAVA) -jar ${HOME}/.m2/repository/com/mrv/yangtools/swagger-generator-cli/1.1.11/swagger-generator-cli-1.1.11-executable.jar -yang-dir $(MODEL_DIR) -output $(OUT_DIR)/$@
+	$(Q)$(JAVA) -jar ${HOME}/.m2/repository/com/mrv/yangtools/swagger-generator-cli/1.1.14/swagger-generator-cli-1.1.14-executable.jar -yang-dir $(MODEL_DIR) -output $(OUT_DIR)/$@
 
 yang-ietf:
 	$(Q)wget -q https://raw.githubusercontent.com/YangModels/yang/master/standard/ietf/RFC/ietf-yang-types%402013-07-15.yang -O $(MODEL_DIR)/ietf-yang-types.yang
@@ -101,7 +101,7 @@ yang2swagger:
 	$(Q)mkdir -p ${HOME}/.m2
 	$(Q)wget -q -O ${HOME}/.m2/settings.xml https://raw.githubusercontent.com/opendaylight/odlparent/master/settings.xml
 	git clone https://github.com/bartoszm/yang2swagger.git
-	git -C yang2swagger checkout tags/1.1.11
+	git -C yang2swagger checkout tags/1.1.14
 	mvn -f yang2swagger/pom.xml clean install
 
 package:
@@ -116,5 +116,11 @@ sol006_deps:
 	$(Q)patch -p2 < patch/deref_warnings.patch
 	$(Q)patch -p2 < patch/nested_workaround.patch
 
+rename_etsi_nfv_py:
+	mv osm_im/etsi-nfv-nsd.py osm_im/etsi_nfv_nsd.py
+	mv osm_im/etsi-nfv-vnfd.py osm_im/etsi_nfv_vnfd.py
+
 clean:
 	$(Q)rm -rf dist sol006_model osm_im.egg-info deb deb_dist *.gz osm-imdocs* yang2swagger $(TREES_DIR)
+	$(Q)rm -rf debian/osm-imdocs.install osm_im/etsi_nfv_nsd.py osm_im/etsi_nfv_vnfd.py osm_im/nsd.py
+	$(Q)rm -rf osm_im/nsi.py osm_im/nst.py osm_im/osm.yaml osm_im/vnfd.py
