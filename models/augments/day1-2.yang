@@ -37,7 +37,7 @@ module day1-2 {
                 type string;
             }
             uses common:vnfc-configuration;
-            uses common:vnfc-relations;
+            uses common:relations;
             uses common:vdu-config-access;
 
             leaf-list blacklist-config-primitive {

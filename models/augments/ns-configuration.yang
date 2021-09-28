@@ -34,7 +34,7 @@ module ns-configuration {
               "Information about NS configuration.";
 
             uses common:vnfc-configuration;
-            uses common:vnfc-relations;
+            uses common:relations;
         }
     }
 

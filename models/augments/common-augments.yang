@@ -20,6 +20,13 @@ module common-augments {
     namespace "urn:etsi:osm:yang:augments";
     prefix "common";
 
+    import etsi-nfv-vnfd {
+        prefix vnfd;
+    }
+    import etsi-nfv-nsd {
+        prefix nsd;
+    }
+
     typedef parameter-data-type {
         type enumeration {
             enum STRING;
@@ -102,10 +109,79 @@ module common-augments {
         }
     }
 
-    grouping vnfc-relations {
+    grouping relations-ee {
+        description
+          "Information about the execution environment and endpoint for a relation.
+           The execution environment can be associated to different objects: kdu, vdu, vnf, or ns.
+           To select the object, the profile-id of the object might be needed:
+            Reference to a kdu-level execution enviroment:
+                in the VNFd: the kdu-resource-profile-id is needed.
+                in the NSd: the kdu-resource-profile-id and vnf-profile-id are needed.
+            Reference to a vdu-level execution enviroment:
+                in the VNFd: the vdu-profile-id is needed.
+                in the NSd: the vdu-profile-id and vnf-profile-id are needed.
+            Reference to a vnf-level execution enviroment:
+                in the VNFd: nothing is needed, implicit.
+                in the NSd: the vnf-profile-id is needed.
+            Reference to an ns-level execution enviroment:
+                in the VNFd: cannot be done.
+                in the NSd: nothing is needed, implicit.
+           The reference to the execution environment is only mandatory if there is more than one execution environment
+           in the execution-environment-list of an object.
+           The endpoint is always needed";
+
+        leaf vdu-profile-id {
+            description
+              "If the execution environment is associated to a vdu object,
+              this parameter is the reference to the vdu-profile id.";
+            type leafref {
+                path "/vnfd:vnfd/vnfd:df/vnfd:vdu-profile/vnfd:id";
+            }
+        }
+
+        leaf kdu-resource-profile-id {
+            description
+              "If the execution environment is associated to a kdu resource object,
+              this parameter is the reference to the kdu-resource-profile id.";
+            type string;
+        }
+
+        leaf vnf-profile-id {
+            description
+              "If the execution environment is associated to a vnf object,
+              this parameter is the reference to the vnf-profile id.
+              Only valid in the NSd. The value is implicit in a VNFd.
+              To reference an execution environment associated to a vnf object
+              from the VNFd, none of the profile ids need to be specified.";
+            type leafref {
+                path "/nsd:nsd/nsd:nsd/nsd:df/nsd:vnf-profile/nsd:id";
+            }
+        }
+        leaf execution-environment-ref {
+            description
+              "Optional reference to the execution environment id.
+              Only needed if there is more than one execution environment
+              in the execution-environment-list of an object.";
+            type string;
+            default "";
+        }
+        leaf endpoint {
+            description
+              "Endpoint name of the execution environment.";
+            type string;
+        }
+    }
+
+    grouping relations {
         list relation {
             description
-              "List of relations between elements in this descriptor.";
+              "List of relations between elements in this descriptor.
+               The relations are used to integrate pairs of execution environments,
+               that are in charge of the configuration and lifecycle management
+               of VDUs, VNFs, KDUs, or NSs.
+               Each relation is formed by a provider and a requirer.
+                  The provider is the execution environment that provides a particular service.
+                  The requirer is the execution environment that requires the service provided by the provider";
             key "name";
 
             leaf name {
@@ -114,27 +190,15 @@ module common-augments {
 
                 type string;
             }
-
-            list entities {
+            container provider {
                 description
-                  "List of two elements to be related.
-                   Elements to be related are identified by a pair (id, endpoint).
-                   The relation will relate (id1, endpoint1) to (id2, endpoint2).";
-                key "id";
-
-                leaf id {
-                    description
-                      "A string, reference to the element id in the descriptor.
-                       It could be a vnfd-id or a vdu-id in a VNFD,
-                       or a nsd-id or member-vnf-index in a NSD.";
-                    type string;
-                }
-
-                leaf endpoint {
-                    description
-                      "Endpoint name defining the relation.";
-                    type string;
-                }
+                  "Execution environment that offers an endpoint for a particular service";
+                uses relations-ee;
+            }
+            container requirer {
+                description
+                  "Execution environment that uses the service provided by the provider";
+                uses relations-ee;
             }
         }
     }
