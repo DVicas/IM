@@ -33,7 +33,7 @@ module day1-2 {
             key "id";
             leaf id {
                 description
-                  "Internal identifier for the VNF/VDU/KNF/KDU configuration";
+                  "Internal identifier for the VNF/VDU/KDU configuration";
                 type string;
             }
             uses common:vnfc-configuration;

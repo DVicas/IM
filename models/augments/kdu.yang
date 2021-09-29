@@ -94,6 +94,28 @@ module kdu {
                     }
                 }
             }
+
+            list service {
+              description
+                "List of Kubernetes services exposed by the KDU.
+                 If empty, all services are assumed to be exposed in the CP associated to the first network
+                 in k8s-cluster.nets.";
+              key name;
+
+              leaf name {
+                description "Name of the Kubernetes service exposed by he KDU model";
+                type string;
+              }
+
+              leaf external-connection-point-ref {
+                description
+                  "String representing a leaf reference to the particular external connection point.
+                   This field should match /etsi-nfv-vnfd:vnfd/etsi-nfv-vnfd:ext-cpd/etsi-nfv-vnfd:id
+                  ";
+                type string;
+              }
+            }
+
         }
 
         container k8s-cluster {
@@ -134,39 +156,6 @@ module kdu {
                 }
             }
         }
-
-        list service {
-          description
-            "List of Kubernetes services exposed by the KDU.
-             If empty, all services are assumed to be exposed in the CP associated to the first network
-             in k8s-cluster.nets.";
-          key name;
-
-          leaf name {
-            description "Name of the Kubernetes service exposed by he KDU model";
-            type string;
-          }
-
-          leaf mgmt-service {
-            description
-                "Flag to indicate that this Kubernetes service is a mgmt service
-                to be used for KDU configuration. Defaults to false (if no present).
-                All services with mgmt-service set to true will be passed to the execution
-                environment in charge of the KDU configuration.";
-            type boolean;
-            default false;
-          }
-
-          leaf external-connection-point-ref {
-            description
-              "String representing a leaf reference to the particular external connection point.
-               This field should match /etsi-nfv-vnfd:vnfd/etsi-nfv-vnfd:ext-cpd/etsi-nfv-vnfd:id
-              ";
-            type string;
-          }
-
-        }
-
     }
 
     augment "/vnfd:vnfd" {
