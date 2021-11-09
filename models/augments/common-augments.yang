@@ -200,6 +200,31 @@ module common-augments {
                   "Execution environment that uses the service provided by the provider";
                 uses relations-ee;
             }
+            list entities {
+                description
+                  "DEPRECATION NOTICE: use provider and requirer instead.
+                   List of two elements to be related.
+                   Elements to be related are identified by a pair (id, endpoint).
+                   The relation will relate (id1, endpoint1) to (id2, endpoint2).";
+                key "id";
+
+                leaf id {
+                    description
+                      "A string, reference to the element id in the descriptor.
+                       It could be a vnfd-id or a vdu-id in a VNFD,
+                       or a nsd-id or member-vnf-index in a NSD.";
+                    type string;
+                }
+
+                leaf endpoint {
+                    description
+                      "Endpoint name defining the relation.";
+                    type string;
+                }
+            }
+            must 'not(entities) or (not(provider) and not(requirer))' {
+                error-message 'Cannot set both "entities" and "provider/requirer" fields.';
+            }
         }
     }
 
