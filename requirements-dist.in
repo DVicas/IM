@@ -15,3 +15,4 @@
 
 stdeb
 setuptools-version-command
+setuptools<60

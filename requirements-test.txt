@@ -1,11 +1,3 @@
-coverage==5.5
-    # via
-    #   -r requirements-test.in
-    #   nose2
-nose2==0.10.0
-    # via -r requirements-test.in
-six==1.15.0
-    # via nose2
 #######################################################################################
 # Copyright ETSI Contributors and Others.
 #
@@ -22,3 +14,11 @@ six==1.15.0
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #######################################################################################
+coverage==6.2
+    # via
+    #   -r requirements-test.in
+    #   nose2
+nose2==0.10.0
+    # via -r requirements-test.in
+six==1.16.0
+    # via nose2

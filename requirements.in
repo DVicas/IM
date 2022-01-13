@@ -15,4 +15,4 @@
 
 pyang
 pyangbind
-pyyaml
+pyyaml==5.4.1

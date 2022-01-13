@@ -1,10 +1,3 @@
-setuptools-version-command==2.2
-    # via -r requirements-dist.in
-stdeb==0.10.0
-    # via -r requirements-dist.in
-
-# The following packages are considered to be unsafe in a requirements file:
-# setuptools
 #######################################################################################
 # Copyright ETSI Contributors and Others.
 #
@@ -21,3 +14,13 @@ stdeb==0.10.0
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #######################################################################################
+setuptools-version-command==99.9
+    # via -r requirements-dist.in
+stdeb==0.10.0
+    # via -r requirements-dist.in
+
+# The following packages are considered to be unsafe in a requirements file:
+setuptools==59.8.0
+    # via
+    #   -r requirements-dist.in
+    #   setuptools-version-command
