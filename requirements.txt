@@ -14,15 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #######################################################################################
-bitarray==2.3.5
+bitarray==2.5.1
     # via pyangbind
 enum34==1.1.10
     # via pyangbind
-lxml==4.7.1
+lxml==4.9.0
     # via
     #   pyang
     #   pyangbind
-pyang==2.5.2
+pyang==2.5.3
     # via
     #   -r requirements.in
     #   pyangbind
@@ -30,7 +30,7 @@ pyangbind==0.8.1
     # via -r requirements.in
 pyyaml==5.4.1
     # via -r requirements.in
-regex==2021.11.10
+regex==2022.6.2
     # via pyangbind
 six==1.16.0
     # via pyangbind
