@@ -563,6 +563,7 @@ module common-augments {
             enum GT; // greater than
             enum LT; // less than
             enum EQ; // equal
+            enum NE; // not equal
         }
     }
 
