@@ -17,10 +17,15 @@
 # NOTE: pyang and pyangbind are required for build
 
 .PHONY: all clean package trees deps yang-ietf openapi_schemas yang2swagger
-JAVA:=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
-PYANG:= pyang
-PYBINDPLUGIN:=$(shell /usr/bin/env python3 -c \
-	            'import pyangbind; import os; print("{}/plugin".format(os.path.dirname(pyangbind.__file__)))')
+JAVA := /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+PYANG := pyang
+ifeq ($(OS),Windows_NT)     # is Windows_NT on XP, 2000, 7, Vista, 10...
+    PYTHON_INTERPRETER := python
+else
+    PYTHON_INTERPRETER := python3
+endif
+PYBINDPLUGIN := $(shell $(PYTHON_INTERPRETER) -c \
+    'import pyangbind; import os; print(os.path.join(f"{os.path.dirname(pyangbind.__file__)}", "plugin"))')
 
 YANG_DESC_MODELS := vnfd nsd nst nsi etsi-nfv-vnfd etsi-nfv-nsd
 YANG_RECORD_MODELS := vnfr nsr
@@ -57,7 +62,7 @@ $(TREES_DIR):
 	$(Q)echo generating $@ from $*.yang
 	$(if $(findstring etsi,$@), $(eval DIR=$(SOL006_MODEL_DIR)),$(eval DIR=$(MODEL_DIR)))
 	$(if $(findstring etsi,$@), $(eval AUGMENTS_DIR=$(SOL006_AUGMENTS_DIR)),$(eval AUGMENTS_DIR=))
-	$(Q)pyang $(PYANG_OPTIONS) --path $(DIR) --plugindir $(PYBINDPLUGIN) -f pybind -o $(OUT_DIR)/$@ $(AUGMENTS_DIR) $(DIR)/$*.yang
+	$(Q)pyang $(PYANG_OPTIONS) --path $(DIR) --plugindir "$(PYBINDPLUGIN)" -f pybind -o $(OUT_DIR)/$@ $(AUGMENTS_DIR) $(DIR)/$*.yang
 
 %.tree.txt: $(TREES_DIR) yang-ietf
 	$(Q)echo generating $@ from $*.yang
@@ -122,5 +127,6 @@ rename_etsi_nfv_py:
 
 clean:
 	$(Q)rm -rf dist sol006_model osm_im.egg-info deb deb_dist *.gz osm-imdocs* yang2swagger $(TREES_DIR)
-	$(Q)rm -rf debian/osm-imdocs.install osm_im/etsi_nfv_nsd.py osm_im/etsi_nfv_vnfd.py osm_im/nsd.py
-	$(Q)rm -rf osm_im/nsi.py osm_im/nst.py osm_im/osm.yaml osm_im/vnfd.py
+	$(Q)rm -rf debian/osm-imdocs.install
+	$(Q)rm -rf osm_im/etsi_nfv_nsd.py osm_im/etsi_nfv_vnfd.py
+	$(Q)rm -rf osm_im/nsd.py osm_im/nsi.py osm_im/nst.py osm_im/osm.yaml osm_im/vnfd.py
