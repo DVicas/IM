@@ -39,4 +39,8 @@ module additional-info {
     augment "/vnfd:vnfd/vnfd:virtual-storage-desc" {
         uses common:description;
     }
+
+    augment "/vnfd:vnfd/vnfd:virtual-storage-desc/vnfd:vdu-storage-requirements" {
+        uses common:vdu-storage-requirements;
+    }
 }

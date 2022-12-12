@@ -726,6 +726,27 @@ module common-augments {
         }
     }
 
+    grouping vdu-storage-requirements {
+        list vdu-storage-requirements {
+            description
+              "Array of key-value pairs that articulate the storage
+               deployment requirements. If the storage type is persistent-storage
+               following setting holds the persistent volume upon VM deletion:
+               key: keep-volume
+               value: true";
+
+            key "key";
+
+            leaf key {
+                type string;
+            }
+
+            leaf value {
+                type string;
+            }
+        }
+    }
+
     typedef scaling-trigger {
         type enumeration {
             enum pre-scale-in {
