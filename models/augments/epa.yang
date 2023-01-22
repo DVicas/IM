@@ -90,19 +90,15 @@ module epa {
               "CPU thread pinning policy describes how to
                place the guest CPUs when the host supports
                hyper threads:
-               AVOID   : Avoids placing a guest on a host
-                         with threads.
-               SEPARATE: Places vCPUs on separate cores,
-                         and avoids placing two vCPUs on
-                         two threads of same core.
+               REQUIRE : Each vCPU is allocated on thread siblings
+                         of the same core.
                ISOLATE : Places each vCPU on a different core,
                          and places no vCPUs from a different
                          guest on the same core.
                PREFER  : Attempts to place vCPUs on threads
                          of the same core.";
             type enumeration {
-                enum AVOID;
-                enum SEPARATE;
+                enum REQUIRE;
                 enum ISOLATE;
                 enum PREFER;
             }
