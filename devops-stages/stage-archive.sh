@@ -20,5 +20,3 @@ rm -rf pool
 rm -rf dists
 mkdir -p pool/$MDG
 mv deb_dist/*.deb pool/$MDG/
-mv *.deb pool/$MDG/
-

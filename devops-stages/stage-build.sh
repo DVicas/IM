@@ -15,4 +15,4 @@
 
 rm -rf dist deb_dist osm*.tar.gz *.egg-info .eggs
 
-tox -e dist
+tox -e dist --recreate
