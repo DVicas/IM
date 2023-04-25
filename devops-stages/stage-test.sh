@@ -16,5 +16,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-OUTPUT=$(TOX_PARALLEL_NO_SPINNER=1 tox --parallel=auto)
-printf "$OUTPUT"
+echo "Launching tox"
+TOX_PARALLEL_NO_SPINNER=1 tox --parallel=auto
+
