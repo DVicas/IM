@@ -1,0 +1,148 @@
+module migrations {
+  yang-version 1.1;
+  namespace "urn:etsi:osm:yang:augments:migrations";
+  prefix "migrations";
+
+  import etsi-nfv-vnfd {
+    prefix vnfd;
+  }
+
+  import common-augments {
+    prefix common;
+  }
+
+  import kdu {
+    prefix kdu;
+  }
+
+  grouping migration-descriptor {
+    list migration-aspect {
+      
+      key "id";
+
+      leaf id {
+        description
+          "Unique identifier of this aspect in the VNFD.";
+        type string;
+      }
+
+      leaf name {
+        description 
+          "Human readable name of the aspect.";
+        type string;
+      }
+
+      leaf description {
+        description
+          "Human readable description of the aspect.";
+        type string;
+      }
+
+      list migration-policy {
+
+        key "name";
+
+        leaf name {
+          description
+            "Name of the migration policy";
+          type string;
+        }
+
+        leaf threshold-time {
+          description
+            "The duration for which the criteria must hold true";
+          type uint32;
+          mandatory true;
+        }
+
+        leaf cooldown-time {
+          description
+            "The duration after a migration action has been
+              triggered, for which there will be no further optional";
+          type uint32;
+          mandatory true;
+        }
+
+        list migration-criteria {
+          description 
+            "list of conditions to be met for generating migration 
+              requests";
+          key "name";
+
+          leaf name {
+            type string;
+          }
+
+          leaf threshold {
+            description
+              "Value which migration requests are generated";
+            type decimal64 {
+              fraction-digits 10;
+            }
+          }
+
+          leaf migration-relational-operation {
+            description
+              "The relational operator used to compare the monitoring
+                param agaisnt the threshold value";
+            type common:relational-operation-type;
+            default GE;
+          }
+        }
+      }
+    }
+  }
+  
+  grouping extended-kdu-resource-profile {
+    list kdu-resource-profile {
+      description
+        "The Kdu resource profile describes additional instantiation data for
+        a given KDU used in a deployment flavour.";
+      key "id";
+    
+      leaf id {
+        type string;
+      }
+
+      leaf resource-name {
+        description
+          "Name of the application of KDU";
+        type string;
+      }
+
+      leaf kdu-name {
+        description
+          "Name of the KDU";
+        type leafref {
+          path "/vnfd:vnfd/kdu:kdu/kdu:name";
+        }
+      }
+
+      leaf-list node-blacklist {
+        description
+          "List of nodes this KDU is not allowed to be scheduled. 
+          Shall be any label used to reference a single/multiple nodes";
+        type string;
+      }
+
+      leaf-list node-list {
+        description
+          "List of nodes this KDU is allowed to be scheduled. 
+          Shall be any label used to reference a single/multiple nodes";
+        type string;
+      }
+    }
+  }
+
+  augment "/vnfd:vnfd/vnfd:df" {
+    uses extended-kdu-resource-profile;
+  }
+
+  augment "/vnfd:vnfd/vnfd:df" {
+    uses migration-descriptor;
+  }
+
+  // augment "/" {
+  //   uses ;
+  // }
+}
