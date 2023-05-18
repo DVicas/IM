@@ -59,7 +59,6 @@ setup(
     name='osm_im',
     description='OSM Information Model',
     long_description=open('README.rst').read(),
-    version_command=('git describe --tags --long --dirty --match v*', 'pep440-git-full'),
     author='OSM Support',
     author_email='osmsupport@etsi.org',
     packages=find_packages(),
@@ -72,4 +71,5 @@ setup(
     setup_requires=["setuptools_scm"],
     # DEPRECATED
     # setup_requires=['setuptools-version-command'],
+    # version_command=('git describe --tags --long --dirty --match v*', 'pep440-git-full'),
 )
