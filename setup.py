@@ -67,7 +67,9 @@ setup(
     url='https://osm.etsi.org/gitweb/?p=osm/IM.git;a=summary',
     license='Apache 2.0',
     cmdclass={'install': Install_osm_im},
-    use_scm_version=True,
+    use_scm_version={
+        "git_describe_command": "git describe --match v* --tags --long --dirty",
+    },
     setup_requires=["setuptools_scm"],
     # DEPRECATED
     # setup_requires=['setuptools-version-command'],
