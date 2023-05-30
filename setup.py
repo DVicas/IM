@@ -30,12 +30,6 @@ class Install_osm_im(install):
         subprocess.call([sys.executable, "-m", "pip", "install", package])
 
     def run(self):
-        self.pipinstall('pyang')
-        self.pipinstall('pyangbind')
-        import pyangbind
-        print("Using dir {}/{} for python artifacts".format(os.getcwd(), self.im_dir))
-        path = "{}/{}".format(os.getcwd(), self.im_dir)
-
         protoc_command = ["make", "models"]
         if subprocess.call(protoc_command) != 0:
             sys.exit(-1)
