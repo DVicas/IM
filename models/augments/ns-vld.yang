@@ -102,9 +102,9 @@ module ns-vld {
                   element";
            }
 
-           leaf ip-address {
+           leaf-list ip-address {
                description
-                 "IP address assigned to the internal connection point";
+                 "IP address list assigned to the internal connection point";
                   type inet:ip-address;
            }
        }
