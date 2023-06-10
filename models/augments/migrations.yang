@@ -11,8 +11,8 @@ module migrations {
     prefix common;
   }
 
-  import kdu {
-    prefix kdu;
+  import scaling {
+    prefix scaling;
   }
 
   grouping migration-descriptor {
@@ -63,6 +63,20 @@ module migrations {
           mandatory true;
         }
 
+        // leaf vdu-id {
+        //   description
+        //     "Identifier of the VDU";
+        //   type string;
+        // }
+
+        leaf kdu-resource-ref {
+          description
+            "Identifier of a KDU resource";
+          type leafref {
+            path "/vnfd:vnfd/vnfd:df/scaling:kdu-resource-profile/scaling:id";
+          }
+        }
+
         list migration-criteria {
           description 
             "list of conditions to be met for generating migration 
@@ -77,8 +91,9 @@ module migrations {
             description
               "Value which migration requests are generated";
             type decimal64 {
-              fraction-digits 10;
+              fraction-digits 5;
             }
+            mandatory true;
           }
 
           leaf migration-relational-operation {
@@ -88,61 +103,38 @@ module migrations {
             type common:relational-operation-type;
             default GE;
           }
+
+          leaf monitoring-parameter-ref {
+            description 
+              "Reference to a monitoring parameter";
+            type string;
+          }
         }
       }
     }
   }
   
   grouping extended-kdu-resource-profile {
-    list kdu-resource-profile {
+    leaf-list node-blacklist {
       description
-        "The Kdu resource profile describes additional instantiation data for
-        a given KDU used in a deployment flavour.";
-      key "id";
-    
-      leaf id {
-        type string;
-      }
+        "List of nodes this KDU is not allowed to be scheduled. 
+        Shall be any label used to reference a single/multiple nodes";
+      type string;
+    }
 
-      leaf resource-name {
-        description
-          "Name of the application of KDU";
-        type string;
-      }
-
-      leaf kdu-name {
-        description
-          "Name of the KDU";
-        type leafref {
-          path "/vnfd:vnfd/kdu:kdu/kdu:name";
-        }
-      }
-
-      leaf-list node-blacklist {
-        description
-          "List of nodes this KDU is not allowed to be scheduled. 
-          Shall be any label used to reference a single/multiple nodes";
-        type string;
-      }
-
-      leaf-list node-list {
-        description
-          "List of nodes this KDU is allowed to be scheduled. 
-          Shall be any label used to reference a single/multiple nodes";
-        type string;
-      }
+    leaf-list node-list {
+      description
+        "List of nodes this KDU is allowed to be scheduled. 
+        Shall be any label used to reference a single/multiple nodes";
+      type string;
     }
   }
 
-  augment "/vnfd:vnfd/vnfd:df" {
+  augment "/vnfd:vnfd/vnfd:df/scaling:kdu-resource-profile" {
     uses extended-kdu-resource-profile;
   }
 
   augment "/vnfd:vnfd/vnfd:df" {
     uses migration-descriptor;
   }
-
-  // augment "/" {
-  //   uses ;
-  // }
 }
