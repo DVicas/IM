@@ -730,10 +730,17 @@ module common-augments {
         list vdu-storage-requirements {
             description
               "Array of key-value pairs that articulate the storage
-               deployment requirements. If the storage type is persistent-storage
-               following setting holds the persistent volume upon VM deletion:
-               key: keep-volume
-               value: true";
+               deployment requirements.
+
+               If the storage type is persistent-storage, the following setting
+               holds the persistent volume upon VM deletion:
+                 key: keep-volume
+                 value: true
+
+               If storage volume can be attached to several VMs, the following setting
+               will allow it:
+                 key: multiattach
+                 value: true";
 
             key "key";
 
