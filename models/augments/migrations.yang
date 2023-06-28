@@ -48,6 +48,15 @@ module migrations {
           type string;
         }
 
+        leaf migration-criteria-operation {
+          description 
+            "Operation to be applied to check between migration criterias to
+             check if the scale in threshold condition has been met.
+             Defaults to AND";
+          type common:scaling-criteria-operation;
+          default AND;
+        }
+
         leaf threshold-time {
           description
             "The duration for which the criteria must hold true";
