@@ -113,7 +113,7 @@ module migrations {
             default GE;
           }
 
-          leaf monitoring-parameter-ref {
+          leaf vnf-monitoring-parameter-ref {
             description 
               "Reference to a monitoring parameter";
             type string;
