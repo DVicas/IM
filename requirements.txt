@@ -28,7 +28,7 @@ pyang==2.5.3
     #   pyangbind
 pyangbind==0.8.1
     # via -r requirements.in
-pyyaml==5.4.1
+pyyaml==6.0.1
     # via -r requirements.in
 regex==2023.5.5
     # via pyangbind
