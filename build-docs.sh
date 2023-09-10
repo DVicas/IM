@@ -1,6 +1,6 @@
 #!/bin/bash
 # Copyright 2018 Sandvine
-# All Rights Reserved.
+# Copyright ETSI Contributors and Others.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -18,8 +18,8 @@ PKG_DIRECTORIES="osm_im_trees models"
 MDG_NAME=im
 PKG_NAME=osm-${MDG_NAME}docs
 DEB_INSTALL=debian/${PKG_NAME}.install
-export DEBEMAIL="mmarchetti@sandvine.com"
-export DEBFULLNAME="Michael Marchetti"
+export DEBEMAIL="OSMSupport@etsi.org"
+export DEBFULLNAME="ETSI OSM"
 
 PKG_VERSION=$(git describe --match "v*" --tags --abbrev=0)
 PKG_VERSION_FULL=$(git describe --match "v*" --tags --long)
@@ -53,5 +53,5 @@ cp -R debian $PKG_DIR/.
 cd $PKG_DIR
 dh_make -y --indep --createorig --a -c apache
 sed -i -e "s/${PKG_VERSION_PREFIX}${POST_UPDATE}-1/$PKG_VERSION_PREFIX${POST_UPDATE}-${PKG_VERSION_FIELDS[2]}/g" debian/changelog
-dpkg-buildpackage -uc -us -tc -rfakeroot 
+dpkg-buildpackage -uc -us -tc -rfakeroot
 cd -
