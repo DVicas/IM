@@ -59,24 +59,22 @@ module migrations {
 
         leaf threshold-time {
           description
-            "The duration for which the criteria must hold true";
-          type uint32;
+            "The duration, in seconds, for which the criteria must hold true";
+          type decimal64 {
+            fraction-digits 3;
+          }       
           mandatory true;
         }
 
         leaf cooldown-time {
           description
-            "The duration after a migration action has been
-              triggered, for which there will be no further optional";
-          type uint32;
+            "The duration, in seconds, after a migration action has been
+              triggered, for which there will be no further ";
+          type decimal64 {
+            fraction-digits 3;
+          }
           mandatory true;
         }
-
-        // leaf vdu-id {
-        //   description
-        //     "Identifier of the VDU";
-        //   type string;
-        // }
 
         leaf kdu-resource-ref {
           description
