@@ -20,6 +20,6 @@ rm -rf pool
 rm -rf dists
 mkdir -p pool/$MDG
 # Move python3-osm-im deb package to pool/$MDG folder
-mv deb_dist/*.deb pool/$MDG/
+mv deb_dist/python3-osm-im*.deb pool/$MDG/
 # Move osm-imdocs deb package to pool/$MDG folder
-mv *.deb pool/$MDG/
+mv osm-imdocs*.deb pool/$MDG/

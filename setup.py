@@ -30,8 +30,8 @@ class Install_osm_im(install):
         subprocess.call([sys.executable, "-m", "pip", "install", package])
 
     def run(self):
-        self.pipinstall('pyang')
-        self.pipinstall('pyangbind')
+        self.pipinstall('pyang==6.0.1')
+        self.pipinstall('pyangbind==0.8.3.post1')
         import pyangbind
         print("Using dir {}/{} for python artifacts".format(os.getcwd(), self.im_dir))
         path = "{}/{}".format(os.getcwd(), self.im_dir)
