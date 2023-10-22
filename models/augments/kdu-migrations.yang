@@ -67,9 +67,7 @@ module kdu-migrations {
         leaf threshold-time {
           description
             "The duration, in seconds, for which the criteria must hold true";
-          type decimal64 {
-            fraction-digits 3;
-          }       
+          type uint32;
           mandatory true;
         }
 
