@@ -1,7 +1,7 @@
 module kdu-migrations {
   yang-version 1.1;
-  namespace "urn:etsi:osm:yang:augments:migrations";
-  prefix "migrations";
+  namespace "urn:etsi:osm:yang:augments:kdu-migrations";
+  prefix "kdu-migrations";
 
   import etsi-nfv-vnfd {
     prefix vnfd;
